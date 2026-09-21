@@ -47,36 +47,42 @@ const goalCards = [
   { tab:'bundle', title:'Bundles',          desc:'Stack your goals, save on every pack',                                          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
 ]
 
-const promoBanners = [
+const heroSlides = [
   {
-    tag: 'BEST SELLER', tagColor: '#9b0d0c',
-    headline: "Singapore's #1\nFat Burner Juice",
-    sub: 'Clinically studied ingredients. Science-backed. Results you can feel in as little as 2 weeks.',
-    bullets: ['Boosts metabolism up to 24% over 8 weeks', 'Reduces fat absorption by up to 39%', 'Clinically studied KSM-66® & Morosil®'],
+    type: 'spend-tiers',
+    leftBg: 'linear-gradient(135deg,#fff8f5 0%,#ffffff 100%)',
+    rightBg: 'linear-gradient(135deg,#c40000 0%,#9b0d0c 45%,#6a0808 100%)',
+    headline: ['Stock up.', 'Save more.'],
+    tiers: [{spend:60,save:5},{spend:120,save:12},{spend:180,save:25}],
+    validity: 'Valid till 4th October 2026.',
+    note: 'No code needed. Offer is automatically applied at checkout.',
+    rightImgs: [
+      'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500',
+      'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500',
+      'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500',
+    ],
+  },
+  {
+    type: 'product-hero',
+    leftBg: '#9b0d0c',
+    rightBg: 'linear-gradient(135deg,#700a09 0%,#9b0d0c 100%)',
+    eyebrow: '★★★★★  Rated 4.9 · Singapore\'s #1 Supplement',
+    headline: ['Singapore\'s #1', 'Fat Burner Juice'],
+    sub: 'Clinically studied KSM-66® & Morosil®. Boost metabolism. Burn more. Every single day.',
     cta: 'Shop Max+ Fat Burner', ctaHref: '/products/max-plus',
-    badge: 'BEST\nSELLER', badgeColor: '#9b0d0c',
+    badge1: '150,000+ boxes sold', badge2: '🇸🇬 Shopee #1 Ranked',
     img: 'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=700',
-    bg: '#fafafa',
   },
   {
-    tag: 'NEW LAUNCH', tagColor: '#1a7a5e',
-    headline: 'Better sleep.\nBetter burns.',
-    sub: 'Your night-time ritual for deeper rest and effortless weight management while you sleep.',
-    bullets: ['Burns fat while you sleep', 'KSM-66® Ashwagandha for cortisol control', 'Rich night hot chocolate — zero guilt'],
+    type: 'product-hero',
+    leftBg: '#0d3d2a',
+    rightBg: 'linear-gradient(135deg,#082a1c 0%,#0d3d2a 100%)',
+    eyebrow: '🆕  NEW LAUNCH · Night-time Fat Burning',
+    headline: ['Better sleep.', 'Better burns.'],
+    sub: 'Rich hot chocolate that burns fat while you rest. KSM-66® Ashwagandha for deep sleep & cortisol control.',
     cta: 'Shop Night Hot Chocolate', ctaHref: '/products/night-hot-chocolate',
-    badge: 'NEW\nLAUNCH', badgeColor: '#1a7a5e',
+    badge1: 'Burns while you sleep', badge2: '☕ Zero guilt',
     img: 'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=700',
-    bg: '#f0f5f2',
-  },
-  {
-    tag: 'GREAT VALUE', tagColor: '#7a5a1a',
-    headline: 'Stack your goals.\nSave more.',
-    sub: 'Bundle your day & night routine and unlock up to 20% off. More results, less spend.',
-    bullets: ['Day + Night fat burning system', 'Save up to 20% vs. buying separate', 'Free shipping on every bundle'],
-    cta: 'Shop Bundles', ctaHref: '/collections/bundles',
-    badge: 'SAVE\n20%', badgeColor: '#7a5a1a',
-    img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=700',
-    bg: '#fdf8f0',
   },
 ]
 
@@ -134,11 +140,11 @@ const BTN_GHOST   = { fontWeight:700, fontSize:14, padding:'14px 26px', borderRa
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('all')
-  const [promoIdx, setPromoIdx] = useState(0)
+  const [heroIdx, setHeroIdx] = useState(0)
   const { ref: statsRef, counts, barsOn } = useStatsAnimation()
 
   useEffect(() => {
-    const t = setInterval(() => setPromoIdx(i => (i + 1) % promoBanners.length), 5000)
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % heroSlides.length), 5500)
     return () => clearInterval(t)
   }, [])
 
@@ -151,55 +157,144 @@ export default function Home() {
 
   return (
     <>
-      {/* ===== HERO ===== */}
-      <section id="top" style={{ position:'relative', padding:'52px 0 32px', overflow:'hidden', background:RED, color:WHITE }}>
-        <div style={{ position:'absolute', width:420, height:420, borderRadius:'50%', background:'rgba(255,255,255,.08)', top:-160, right:-100, pointerEvents:'none' }} />
-        <div style={{ position:'absolute', width:320, height:320, borderRadius:'50%', background:'rgba(255,255,255,.06)', bottom:-100, left:-80, pointerEvents:'none' }} />
-        <div style={WRAP}>
-          <div style={{ display:'grid', gridTemplateColumns:'1.05fr .95fr', gap:40, alignItems:'center', marginBottom:32, position:'relative', zIndex:1 }}>
-            <div>
-              <div style={{ display:'flex', gap:10, alignItems:'center', marginBottom:18 }}>
-                <span style={{ color:'#ffd4d2', letterSpacing:2 }}>★★★★★</span>
-                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:12, textTransform:'uppercase', letterSpacing:'.1em', color:'#ffd4d2' }}>Rated 4.9 · Singapore's #1 Supplement</span>
+      {/* ===== HERO SLIDER ===== */}
+      <section id="top" style={{ position:'relative', overflow:'hidden', userSelect:'none' }}>
+
+        {/* Slides */}
+        {heroSlides.map((slide, i) => (
+          <div key={i} style={{
+            position: i === 0 ? 'relative' : 'absolute',
+            inset: 0,
+            opacity: heroIdx === i ? 1 : 0,
+            transition: 'opacity .7s ease',
+            pointerEvents: heroIdx === i ? 'auto' : 'none',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            minHeight: 480,
+          }}>
+
+            {/* LEFT COLUMN */}
+            {slide.type === 'spend-tiers' ? (
+              <div style={{ background: slide.leftBg, display:'flex', alignItems:'center', padding:'52px 5% 52px 6%' }}>
+                <div style={{ maxWidth: 520 }}>
+                  {/* Gold 3D headline */}
+                  <div style={{ filter:'drop-shadow(3px 5px 0 rgba(100,50,0,.35))' }}>
+                    {slide.headline.map(line => (
+                      <div key={line} style={{
+                        fontFamily:'Poppins,sans-serif', fontWeight:900,
+                        fontSize:'clamp(44px,5.8vw,88px)', lineHeight:0.92,
+                        letterSpacing:'-0.025em',
+                        background:'linear-gradient(180deg,#ffe87c 0%,#f5b820 40%,#c87800 78%,#a05000 100%)',
+                        WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                      }}>{line}</div>
+                    ))}
+                  </div>
+
+                  {/* Tier cards */}
+                  <div style={{ display:'flex', gap:12, margin:'28px 0 18px', flexWrap:'wrap' }}>
+                    {slide.tiers.map(t => (
+                      <div key={t.spend} style={{
+                        background:'linear-gradient(180deg,#ffe566 0%,#e8a800 60%,#c07800 100%)',
+                        borderRadius:14, border:'2.5px solid rgba(255,240,100,.7)',
+                        boxShadow:'0 6px 22px rgba(180,110,0,.45), inset 0 1px 0 rgba(255,255,255,.35)',
+                        overflow:'hidden', minWidth:100, textAlign:'center', flex:'1 1 90px',
+                      }}>
+                        <div style={{ padding:'12px 14px 8px', fontFamily:'Poppins,sans-serif' }}>
+                          <div style={{ fontSize:10, fontWeight:800, letterSpacing:'.12em', color:'#3d1f00', textTransform:'uppercase' }}>SPEND</div>
+                          <div style={{ fontSize:'clamp(34px,4vw,52px)', fontWeight:900, color:'#1a0a00', lineHeight:1.0, letterSpacing:'-0.025em' }}>${t.spend}</div>
+                        </div>
+                        <div style={{ background:RED, padding:'7px 10px' }}>
+                          <div style={{ fontSize:10, fontWeight:800, letterSpacing:'.1em', color:'#ffb0ac', textTransform:'uppercase', fontFamily:'Poppins,sans-serif' }}>SAVE</div>
+                          <div style={{ fontSize:'clamp(24px,3vw,36px)', fontWeight:900, color:GOLD, lineHeight:1.0, fontFamily:'Poppins,sans-serif', letterSpacing:'-0.02em' }}>${t.save}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p style={{ fontSize:13, color:G500, margin:'4px 0 2px', fontStyle:'italic' }}>{slide.validity}</p>
+                  <p style={{ fontSize:13, color:G500, margin:0 }}>{slide.note}</p>
+                </div>
               </div>
-              <h1 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(34px,4vw,52px)', lineHeight:1.03, letterSpacing:'-.015em', marginBottom:14, color:WHITE }}>
-                Singapore's #1<br />Best-Selling{' '}
-                <span style={{ color:GOLD }}>Weight<br />Management</span>{' '}Supplements
-              </h1>
-              <p style={{ fontSize:16, maxWidth:460, color:'rgba(255,255,255,.85)', marginBottom:22, lineHeight:1.55 }}>
-                Burn more calories with Singapore's #1 weight management supplements. Elevate your expectations with our meticulously crafted formula join others towards a healthier you.
-              </p>
-              <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-                <a href="#catalog" onClick={e => { e.preventDefault(); toCatalog('all') }}
-                  style={{ ...BTN_PRIMARY, background:WHITE, color:RED, borderColor:WHITE }}>
-                  Shop All Products
-                </a>
-                <Link to="/pages/find-your-fit"
-                  style={{ ...BTN_GHOST, color:WHITE, borderColor:'rgba(255,255,255,.6)' }}>
-                  Find Your Fit →
-                </Link>
+            ) : (
+              <div style={{ background: slide.leftBg, display:'flex', alignItems:'center', padding:'52px 5% 52px 6%' }}>
+                <div style={{ maxWidth: 520 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,.7)', letterSpacing:'.06em', marginBottom:18, fontFamily:'Poppins,sans-serif' }}>{slide.eyebrow}</div>
+                  <div>
+                    {slide.headline.map((line, li) => (
+                      <div key={li} style={{
+                        fontFamily:'Poppins,sans-serif', fontWeight:900,
+                        fontSize:'clamp(36px,4.5vw,64px)', lineHeight:1.0,
+                        letterSpacing:'-0.02em', color:WHITE,
+                      }}>{line}</div>
+                    ))}
+                  </div>
+                  <p style={{ fontSize:15, color:'rgba(255,255,255,.8)', margin:'18px 0 28px', lineHeight:1.6, maxWidth:420 }}>{slide.sub}</p>
+                  <div style={{ display:'flex', gap:12, flexWrap:'wrap', marginBottom:22 }}>
+                    <Link to={slide.ctaHref} style={{ ...BTN_PRIMARY, background:WHITE, color: slide.leftBg, borderColor:WHITE, fontSize:14 }}>{slide.cta}</Link>
+                  </div>
+                  <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+                    {[slide.badge1, slide.badge2].map(b => (
+                      <span key={b} style={{ background:'rgba(255,255,255,.15)', border:'1px solid rgba(255,255,255,.25)', borderRadius:30, padding:'6px 14px', fontSize:13, color:WHITE, fontWeight:600 }}>{b}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <div className="product-shot-float"
-                style={{ position:'relative', zIndex:1, width:'100%', maxWidth:400, aspectRatio:'1/1', borderRadius:16, overflow:'hidden', boxShadow:'0 40px 80px rgba(0,0,0,.35)' }}>
-                <img src="https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600" alt="Max+ Fat Burner"
-                  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-              </div>
-              <div className="float-badge-b1"
-                style={{ position:'absolute', top:-14, left:-14, zIndex:2, background:WHITE, border:`1px solid ${G200}`, borderRadius:30, padding:'10px 16px', fontFamily:'Poppins,monospace', fontSize:14, fontWeight:600, boxShadow:'0 10px 24px rgba(0,0,0,.18)', display:'flex', alignItems:'center', gap:6, color:G900, whiteSpace:'nowrap' }}>
-                <span className="pulse-dot" style={{ width:7, height:7, borderRadius:'50%', background:RED, display:'inline-block', flexShrink:0 }} />
-                150,000+ boxes sold
-              </div>
-              <div className="float-badge-b2"
-                style={{ position:'absolute', bottom:-14, right:-14, zIndex:2, background:WHITE, border:`1px solid ${G200}`, borderRadius:30, padding:'10px 16px', fontFamily:'Poppins,monospace', fontSize:14, fontWeight:600, boxShadow:'0 10px 24px rgba(0,0,0,.18)', color:G900, whiteSpace:'nowrap' }}>
-                🇸🇬 Shopee #1 Ranked
-              </div>
+            )}
+
+            {/* RIGHT COLUMN */}
+            <div style={{ background: slide.rightBg, position:'relative', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', padding:'40px 5%' }}>
+              {/* Decorative circles */}
+              <div style={{ position:'absolute', width:360, height:360, borderRadius:'50%', background:'rgba(255,255,255,.06)', top:-80, right:-80, pointerEvents:'none' }} />
+              <div style={{ position:'absolute', width:240, height:240, borderRadius:'50%', background:'rgba(255,255,255,.04)', bottom:-60, left:-40, pointerEvents:'none' }} />
+
+              {slide.type === 'spend-tiers' ? (
+                /* Fanned product images */
+                <div style={{ position:'relative', width:'100%', maxWidth:480, height:360, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <img src={slide.rightImgs[0]} alt="" style={{ position:'absolute', width:'48%', maxWidth:200, objectFit:'contain', transform:'rotate(-12deg) translate(-90px,18px)', filter:'drop-shadow(0 20px 30px rgba(0,0,0,.5))', zIndex:1 }} />
+                  <img src={slide.rightImgs[1]} alt="" style={{ position:'absolute', width:'54%', maxWidth:230, objectFit:'contain', transform:'rotate(3deg)', filter:'drop-shadow(0 24px 36px rgba(0,0,0,.5))', zIndex:3 }} />
+                  <img src={slide.rightImgs[2]} alt="" style={{ position:'absolute', width:'46%', maxWidth:195, objectFit:'contain', transform:'rotate(16deg) translate(90px,12px)', filter:'drop-shadow(0 20px 30px rgba(0,0,0,.5))', zIndex:2 }} />
+                  {/* Gold confetti lines */}
+                  <div style={{ position:'absolute', top:20, left:'20%', width:60, height:3, background:'linear-gradient(90deg,#ffd47900,#ffd479,#ffd47900)', borderRadius:2, transform:'rotate(-30deg)', opacity:.7 }} />
+                  <div style={{ position:'absolute', bottom:30, right:'18%', width:50, height:3, background:'linear-gradient(90deg,#ffd47900,#ffd479,#ffd47900)', borderRadius:2, transform:'rotate(20deg)', opacity:.6 }} />
+                  <div style={{ position:'absolute', top:'40%', left:'8%', width:40, height:3, background:'linear-gradient(90deg,#ffd47900,#ffd479,#ffd47900)', borderRadius:2, transform:'rotate(60deg)', opacity:.5 }} />
+                </div>
+              ) : (
+                /* Single product float */
+                <img src={slide.img} alt={slide.headline[0]}
+                  className="product-shot-float"
+                  style={{ width:'80%', maxWidth:380, objectFit:'contain', filter:'drop-shadow(0 30px 50px rgba(0,0,0,.5))', position:'relative', zIndex:1 }} />
+              )}
             </div>
           </div>
+        ))}
 
-          {/* Cat-strip */}
-          <div style={{ position:'relative', zIndex:1, display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14 }}>
+        {/* Left arrow */}
+        <button onClick={() => setHeroIdx(i => (i - 1 + heroSlides.length) % heroSlides.length)}
+          style={{ position:'absolute', left:16, top:'50%', transform:'translateY(-50%)', zIndex:20, width:44, height:44, borderRadius:'50%', background:'rgba(0,0,0,.32)', border:'1.5px solid rgba(255,255,255,.25)', color:WHITE, fontSize:22, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1, backdropFilter:'blur(4px)', transition:'background .2s' }}
+          onMouseEnter={e => e.currentTarget.style.background='rgba(0,0,0,.55)'}
+          onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,.32)'}
+        >‹</button>
+
+        {/* Right arrow */}
+        <button onClick={() => setHeroIdx(i => (i + 1) % heroSlides.length)}
+          style={{ position:'absolute', right:16, top:'50%', transform:'translateY(-50%)', zIndex:20, width:44, height:44, borderRadius:'50%', background:'rgba(0,0,0,.32)', border:'1.5px solid rgba(255,255,255,.25)', color:WHITE, fontSize:22, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1, backdropFilter:'blur(4px)', transition:'background .2s' }}
+          onMouseEnter={e => e.currentTarget.style.background='rgba(0,0,0,.55)'}
+          onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,.32)'}
+        >›</button>
+
+        {/* Dot nav */}
+        <div style={{ position:'absolute', bottom:14, left:'50%', transform:'translateX(-50%)', display:'flex', gap:7, zIndex:20 }}>
+          {heroSlides.map((_, i) => (
+            <button key={i} onClick={() => setHeroIdx(i)}
+              style={{ width: heroIdx === i ? 26 : 8, height:8, borderRadius:4, border:'none', cursor:'pointer', transition:'all .3s ease', background: heroIdx === i ? WHITE : 'rgba(255,255,255,.45)', padding:0 }} />
+          ))}
+        </div>
+      </section>
+
+      {/* Cat-strip */}
+      <section style={{ background:WHITE, borderBottom:`1px solid ${G200}`, padding:'16px 0' }}>
+        <div style={WRAP}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14 }}>
             {catChips.map(c => (
               <div key={c.tab} onClick={() => toCatalog(c.tab)}
                 style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, padding:12, display:'flex', alignItems:'center', gap:14, cursor:'pointer', transition:'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease' }}
@@ -229,70 +324,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* ===== PROMO BANNER CAROUSEL ===== */}
-      <section style={{ position:'relative', overflow:'hidden', transition:'background .5s ease', background: promoBanners[promoIdx].bg }}>
-        {promoBanners.map((b, i) => (
-          <div key={i} style={{
-            position: i === 0 ? 'relative' : 'absolute',
-            inset: 0,
-            opacity: promoIdx === i ? 1 : 0,
-            transition: 'opacity .6s ease',
-            pointerEvents: promoIdx === i ? 'auto' : 'none',
-            background: b.bg,
-          }}>
-            <div style={{ ...WRAP, padding:'52px 28px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, alignItems:'center', minHeight:340 }}>
-              {/* Text */}
-              <div>
-                <span style={{ display:'inline-block', background: b.tagColor, color:WHITE, fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', padding:'4px 12px', borderRadius:4, marginBottom:18 }}>
-                  {b.tag}
-                </span>
-                <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(28px,3.2vw,44px)', lineHeight:1.05, letterSpacing:'-.015em', color:G900, marginBottom:14, whiteSpace:'pre-line' }}>
-                  {b.headline}
-                </h2>
-                <p style={{ fontSize:15, color:G700, lineHeight:1.6, marginBottom:20, maxWidth:420 }}>{b.sub}</p>
-                <ul style={{ listStyle:'none', padding:0, margin:'0 0 28px', display:'flex', flexDirection:'column', gap:9 }}>
-                  {b.bullets.map(pt => (
-                    <li key={pt} style={{ display:'flex', alignItems:'flex-start', gap:10, fontSize:14, color:G700 }}>
-                      <span style={{ width:18, height:18, minWidth:18, borderRadius:'50%', background: b.tagColor, display:'flex', alignItems:'center', justifyContent:'center', marginTop:1 }}>
-                        <span style={{ color:WHITE, fontSize:10, fontWeight:700 }}>✓</span>
-                      </span>
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-                <Link to={b.ctaHref} style={{ ...BTN_PRIMARY, background: b.tagColor, borderColor: b.tagColor }}>
-                  {b.cta} →
-                </Link>
-              </div>
-              {/* Image + badge */}
-              <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <img src={b.img} alt={b.headline}
-                  style={{ width:'100%', maxWidth:380, aspectRatio:'1/1', objectFit:'contain', display:'block', filter:'drop-shadow(0 20px 40px rgba(0,0,0,.15))' }} />
-                <div style={{
-                  position:'absolute', top:16, right:16,
-                  width:74, height:74, borderRadius:'50%',
-                  background: b.badgeColor, color:WHITE,
-                  display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                  fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:13, textAlign:'center', lineHeight:1.2,
-                  whiteSpace:'pre-line', boxShadow:'0 8px 20px rgba(0,0,0,.25)',
-                }}>
-                  {b.badge}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {/* Dot nav */}
-        <div style={{ position:'absolute', bottom:18, left:'50%', transform:'translateX(-50%)', display:'flex', gap:8, zIndex:10 }}>
-          {promoBanners.map((_, i) => (
-            <button key={i} onClick={() => setPromoIdx(i)}
-              style={{ width: promoIdx === i ? 24 : 8, height:8, borderRadius:4, border:'none', cursor:'pointer', transition:'all .3s ease',
-                background: promoIdx === i ? G900 : G300, padding:0 }} />
-          ))}
-        </div>
-      </section>
 
       {/* ===== TRUST ROW ===== */}
       <section style={{ padding:'38px 0', borderBottom:`1px solid ${G200}` }}>
