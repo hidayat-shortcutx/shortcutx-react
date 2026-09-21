@@ -25,8 +25,8 @@ export default function Nav() {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur shadow-sm' : 'bg-white'}`}>
       {/* Announce bar */}
-      <div className="bg-brand-red text-white text-center text-xs font-semibold tracking-widest uppercase py-2 px-4">
-        Free shipping on orders above S$100
+      <div className="bg-g900 text-white text-center text-[13px] tracking-[.04em] py-[9px] px-3">
+        🔥 <strong className="text-[#ffb3b0] font-semibold">NEW: NIGHT HOT CHOCOLATE</strong> now live · subscribe &amp; save 15% · free shipping over $100
       </div>
 
       <div className="max-w-[1120px] mx-auto px-7 flex items-center justify-between h-16">
