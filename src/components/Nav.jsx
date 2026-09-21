@@ -49,9 +49,22 @@ export default function Nav() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-[0_6px_20px_rgba(0,0,0,.06)]' : ''}`}>
-      {/* Announce bar */}
-      <div className="bg-g900 text-white text-center text-[13px] tracking-[.04em] py-[9px] px-3">
-        🔥 <strong className="text-[#ffb3b0] font-semibold">NEW: NIGHT HOT CHOCOLATE</strong> now live · subscribe &amp; save 15% · free shipping over $100
+      {/* Announce bar — scrolling ticker */}
+      <div className="bg-g900 text-white text-[13px] tracking-[.04em] py-[9px] overflow-hidden whitespace-nowrap">
+        <div className="marquee-track--announce">
+          {[0, 1].map(i => (
+            <span key={i}>
+              <span className="mx-8">🔥 <strong className="text-[#ffb3b0] font-semibold">NEW: NIGHT HOT CHOCOLATE</strong> now live</span>
+              <span className="mx-2 opacity-40">·</span>
+              <span className="mx-8">Subscribe &amp; save <strong className="text-[#ffb3b0]">15%</strong></span>
+              <span className="mx-2 opacity-40">·</span>
+              <span className="mx-8">Free shipping over <strong className="text-[#ffb3b0]">$100</strong></span>
+              <span className="mx-2 opacity-40">·</span>
+              <span className="mx-8">🎉 <strong className="text-[#ffd479]">Mid-year bundle deals</strong> — up to 20% off</span>
+              <span className="mx-2 opacity-40">·</span>
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Main nav */}

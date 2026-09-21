@@ -1,572 +1,714 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Section, Wrap, Eyebrow } from '../components/Section'
 
-const goalCategories = [
-  {
-    label: 'Burn Fat',
-    desc: 'Max+ Fat Burner Juice, Berry Punch, Blackcurrant, Apple Cider, Lychee Lemon',
-    count: '6 formulas · from $22',
-    tab: 'burn',
-    img: 'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500',
-  },
-  {
-    label: 'Slimming Drinks',
-    desc: 'Detox Juice, De-Bloat White Grape, Flat Tummy Shakes',
-    count: '4 formulas · from $22',
-    tab: 'slim',
-    img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500',
-  },
-  {
-    label: 'Wellness & Sleep',
-    desc: 'Night Hot Chocolate, Night Fat Burner Juice',
-    count: '2 formulas · from $22',
-    tab: 'well',
-    img: 'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500',
-  },
-  {
-    label: 'Bundles',
-    desc: 'Stack your goals, save on every pack',
-    count: 'Save up to 20%',
-    tab: 'bundle',
-    img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500',
-  },
+const RED       = '#9b0d0c'
+const RED_DARK  = '#700a09'
+const RED_LIGHT = '#c33d3c'
+const RED_PALE  = '#fbebea'
+const RED_PALE2 = '#f5d9d8'
+const GOLD      = '#ffd479'
+const G900      = '#333333'
+const G700      = '#4d4d4d'
+const G500      = '#808080'
+const G300      = '#cccccc'
+const G200      = '#e6e6e6'
+const G100      = '#f2f2f2'
+const OFF       = '#fafafa'
+const WHITE     = '#ffffff'
+
+const products = [
+  { name:'Max+ Fat Burner Juice (15×35ml)',     price:'$63.00 – $126.00',      perDay:'4.20', confirmed:true,  cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600',                              badge:'BEST SELLER' },
+  { name:'Max Fat Burner Berry Punch',          price:'$27.50 – $110.00',      perDay:'3.93', confirmed:false, cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=600' },
+  { name:'Max Fat Burner Blackcurrant (7×35ml)',price:'$27.50 – $110.00',      perDay:'3.93', confirmed:true,  cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=600' },
+  { name:'Apple Cider Fat Burner Fruit Juice',  price:'$24.00 – $96.00',       perDay:'3.43', confirmed:false, cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-10.jpg?v=1779346704&width=600' },
+  { name:'Lychee Lemon Fat Burner Juice',       price:'$24.00 – $96.00',       perDay:'3.43', confirmed:false, cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-07.jpg?v=1779346704&width=600' },
+  { name:'Night Fat Burner Juice',              price:'$22.00 – $88.00',       perDay:'3.14', confirmed:false, cat:'burn',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-13.jpg?v=1779346704&width=600' },
+  { name:'Detox Juice',                         price:'$22.00 – $66.00',       perDay:'3.14', confirmed:false, cat:'slim',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=600',                             badge:'BEST SELLER' },
+  { name:'De-Bloat: White Grape',               price:'$24.00 – $96.00',       perDay:'3.43', confirmed:false, cat:'slim',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-01.jpg?v=1779346704&width=600' },
+  { name:'Flat Tummy Shake',                    price:'See range',              perDay:null,   confirmed:false, cat:'slim',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=600' },
+  { name:'Night Hot Chocolate (15 sachets)',    price:'$45.00',                 perDay:'3.00', confirmed:true,  cat:'well',   img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=600',             badge:'NEW' },
+  { name:'Night Fat Burner Juice',              price:'$22.00 – $88.00',       perDay:'3.14', confirmed:false, cat:'well',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-13.jpg?v=1779346704&width=600' },
+  { name:'Starter Fat Burner Bundle',           price:'Save up to 15%',        perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600' },
+  { name:'Build A Box: Reset Stack',            price:'$108.00 (illustrative)', perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=600' },
+  { name:'Advanced Fat Burner Bundle',          price:'Save up to 20%',        perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=600' },
 ]
 
-const tabs = ['All Products', 'Fat Burners', 'Slimming Drinks', 'Wellness', 'Bundles']
-
-const ingredients = [
-  { icon: '🌿', name: 'KSM-66® Ashwagandha', benefit: 'Relaxation' },
-  { icon: '🍊', name: 'Morosil®', benefit: 'Fat metabolism' },
-  { icon: '☕', name: 'Green Coffee Extract', benefit: 'Energy metabolism' },
-  { icon: '🍵', name: 'Chamomile Extract', benefit: 'Calm' },
-  { icon: '🦠', name: 'FOS Prebiotic', benefit: 'Gut health' },
-  { icon: '🥤', name: '30+ Active Formulas', benefit: 'Across the range' },
+const catChips = [
+  { tab:'burn',   label:'Burn Fat',         count:'6 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200' },
+  { tab:'slim',   label:'Slimming Drinks',  count:'4 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200' },
+  { tab:'well',   label:'Wellness & Sleep', count:'2 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200' },
+  { tab:'bundle', label:'Bundles',          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200' },
 ]
 
-const compareRows = [
-  { feature: 'How it\'s developed', scx: 'No OEM — in-house R&D spanning months, testing multiple formulas until right', other: 'Often OEM/white-label, same formula relabelled across brands' },
-  { feature: 'Where it\'s made', scx: 'Formulated & manufactured in the UK', other: 'Often unspecified origin' },
-  { feature: "What's actually in it", scx: 'Clinically studied actives, listed in full — KSM-66®, Morosil®, Satireal™', other: 'Proprietary blends, doses often undisclosed' },
-  { feature: 'Choosing the right one', scx: 'Free quiz built with a real nutritionist, matched to your goals', other: 'Guess and hope, or read 40 reviews first' },
-  { feature: 'Proof, not just promises', scx: '150,000+ boxes sold, #1 on Shopee Singapore, Watsons Singapore award winner', other: 'Marketing claims, rarely independently verified' },
-]
-
-const stats = [
-  { num: '150K+', label: 'boxes sold across Singapore to date' },
-  { num: '#1', label: 'ranked on Shopee Singapore' },
-  { num: '4.9★', label: 'average customer rating' },
-  { num: '2019', label: 'founded in Singapore' },
+const goalCards = [
+  { tab:'burn',   title:'Burn Fat',         desc:'Max+ Fat Burner Juice, Berry Punch, Blackcurrant, Apple Cider, Lychee Lemon', count:'6 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500' },
+  { tab:'slim',   title:'Slimming Drinks',  desc:'Detox Juice, De-Bloat White Grape, Flat Tummy Shakes',                        count:'4 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500' },
+  { tab:'well',   title:'Wellness & Sleep', desc:'Night Hot Chocolate, Night Fat Burner Juice',                                  count:'2 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500' },
+  { tab:'bundle', title:'Bundles',          desc:'Stack your goals, save on every pack',                                          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
 ]
 
 const ambassadors = [
-  { emoji: '🥊', name: 'Efasha "Fash The Face" Kamarudin', role: 'WBC Female Asia Continental Champion', bg: 'linear-gradient(150deg,#2b2523,#333)' },
-  { emoji: '🎤', name: 'Nadhra', role: 'Content Creator & Brand Ambassador', bg: 'linear-gradient(150deg,#c9a227,#8a6a2f)' },
-  { emoji: '🎬', name: 'Nurul Aini', role: 'Actress & TV Presenter, Mediacorp Suria', bg: 'linear-gradient(150deg,#4a6fa5,#2d4870)' },
-  { emoji: '⭐', name: 'Kyliee', role: 'Lifestyle Creator & Brand Partner', bg: 'linear-gradient(150deg,#ff8a3d,#c9600f)' },
+  { name:'Efasha "Fash The Face" Kamarudin', role:'WBC Female Asia Continental Champion',         tag:'BRAND PARTNER',   emoji:'🥊', grad:'linear-gradient(150deg,#2b2523,#333333)' },
+  { name:'Nadhra',                            role:'Content Creator & Brand Ambassador',            tag:'BRAND PARTNER',   emoji:'🎤', grad:'linear-gradient(150deg,#c9a227,#8a6a2f)' },
+  { name:'Nurul Aini',                        role:'Actress & TV Presenter, Mediacorp Suria',      tag:'BRAND PARTNER',   emoji:'🎬', grad:'linear-gradient(150deg,#4a6fa5,#2d4870)' },
+  { name:'Kyliee',                            role:'Skinfluencer & Golf Content Creator',           tag:'BRAND PARTNER',   emoji:'⭐', grad:'linear-gradient(150deg,#ff8a3d,#c9600f)' },
+  { name:'[Add Doctor Name]',                role:'[Add credential, e.g. MBBS, clinic/hospital]', tag:'MEDICAL ADVISOR', emoji:'⚕️', grad:`linear-gradient(150deg,${RED_LIGHT},${RED_DARK})`, tbc:true },
 ]
 
-const testimonials = [
-  { name: 'Wahidah I.', product: 'Gas Relief', stars: 5, text: "I've been using this for 3 weeks now and the difference is night and day. No more bloating after meals. Highly recommend to anyone who struggles with digestive issues." },
-  { name: 'Noredahwati K.', product: 'Detox Plus', stars: 5, text: 'Lost 4kg in a month alongside my diet. Feels clean, no jitters. The detox formula really works — skin looks clearer too. Will definitely repurchase.' },
-  { name: 'Melissa B.S.', product: 'Immunity Shield', stars: 5, text: "Haven't fallen sick since I started taking this. My energy levels are also much better throughout the day. My whole family is on it now." },
+const statsData = [
+  { target:150, suffix:'K+', prefix:'',  label:'boxes sold across Singapore to date', barW:'88%' },
+  { target:1,   suffix:'',   prefix:'#', label:'ranked on Shopee Singapore',          barW:'100%' },
+  { target:4.9, suffix:'★',  prefix:'',  label:'average customer rating',             barW:'96%' },
+  { target:0,   suffix:'',   prefix:'',  label:'happy customers',                     barW:'0%' },
 ]
 
-function Stars({ count = 5 }) {
-  return (
-    <span className="text-brand-gold">{'★'.repeat(count)}</span>
-  )
+function useStatsAnimation() {
+  const ref = useRef(null)
+  const [counts, setCounts] = useState(statsData.map(() => 0))
+  const [barsOn, setBarsOn] = useState(false)
+  const done = useRef(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !done.current) {
+        done.current = true
+        setBarsOn(true)
+        statsData.forEach((s, i) => {
+          const steps = 60, dur = 1800
+          let cur = 0
+          const timer = setInterval(() => {
+            cur = Math.min(cur + s.target / steps, s.target)
+            setCounts(prev => { const n=[...prev]; n[i]=cur; return n })
+            if (cur >= s.target) clearInterval(timer)
+          }, dur / steps)
+        })
+      }
+    }, { threshold: 0.3 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+  return { ref, counts, barsOn }
 }
 
+// shared style helpers
+const WRAP = { maxWidth:1280, margin:'0 auto', padding:'0 28px' }
+const EYEBROW = { fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:12, textTransform:'uppercase', letterSpacing:'.1em', color:RED, display:'block', marginBottom:8 }
+const H2 = { fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(26px,3vw,38px)', lineHeight:1.1, marginBottom:12, letterSpacing:'-.01em', color:G900 }
+const P_BODY = { fontSize:14, color:G700, lineHeight:1.6 }
+const BTN_PRIMARY = { fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'inline-flex', alignItems:'center', gap:8, cursor:'pointer', background:RED, color:WHITE, border:`2px solid ${RED}`, transition:'.2s', textDecoration:'none' }
+const BTN_GHOST   = { fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'inline-flex', alignItems:'center', gap:8, cursor:'pointer', background:'transparent', color:G900, border:`2px solid ${G900}`, transition:'.2s', textDecoration:'none' }
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('All Products')
+  const [activeTab, setActiveTab] = useState('all')
+  const { ref: statsRef, counts, barsOn } = useStatsAnimation()
+
+  const visible = activeTab === 'all' ? products : products.filter(p => p.cat === activeTab)
+
+  function toCatalog(tab) {
+    setActiveTab(tab)
+    document.getElementById('catalog')?.scrollIntoView({ behavior:'smooth' })
+  }
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative bg-brand-red overflow-hidden py-12 md:py-16">
-        {/* Decorative blobs */}
-        <div className="absolute w-[520px] h-[520px] rounded-full opacity-30 pointer-events-none" style={{ background: '#700a09', filter: 'blur(80px)', top: '-120px', right: '-80px' }} />
-        <div className="absolute w-[380px] h-[380px] rounded-full opacity-25 pointer-events-none" style={{ background: '#4d0706', filter: 'blur(60px)', bottom: '-60px', left: '10%' }} />
-
-        <Wrap className="relative z-10">
-          <div className="grid md:grid-cols-[1.05fr_.95fr] gap-10 items-center">
-            {/* Left */}
+      {/* ===== HERO ===== */}
+      <section id="top" style={{ position:'relative', padding:'52px 0 32px', overflow:'hidden', background:RED, color:WHITE }}>
+        <div style={{ position:'absolute', width:420, height:420, borderRadius:'50%', background:'rgba(255,255,255,.08)', top:-160, right:-100, pointerEvents:'none' }} />
+        <div style={{ position:'absolute', width:320, height:320, borderRadius:'50%', background:'rgba(255,255,255,.06)', bottom:-100, left:-80, pointerEvents:'none' }} />
+        <div style={WRAP}>
+          <div style={{ display:'grid', gridTemplateColumns:'1.05fr .95fr', gap:40, alignItems:'center', marginBottom:32, position:'relative', zIndex:1 }}>
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-brand-gold text-sm">★★★★★</span>
-                <span className="text-white/80 text-xs font-semibold tracking-[.12em] uppercase">Rated 4.9 · Singapore's #1 Supplement</span>
+              <div style={{ display:'flex', gap:10, alignItems:'center', marginBottom:18 }}>
+                <span style={{ color:'#ffd4d2', letterSpacing:2 }}>★★★★★</span>
+                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:12, textTransform:'uppercase', letterSpacing:'.1em', color:'#ffd4d2' }}>Rated 4.9 · Singapore's #1 Supplement</span>
               </div>
-              <h1 className="font-black text-[clamp(34px,4vw,52px)] leading-[1.03] tracking-tight text-white mb-4">
-                Singapore's #1<br />
-                Best-Selling <span className="text-brand-gold">Weight<br className="hidden md:block" />
-                Management</span> Supplements
+              <h1 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(34px,4vw,52px)', lineHeight:1.03, letterSpacing:'-.015em', marginBottom:14, color:WHITE }}>
+                Singapore's #1<br />Best-Selling{' '}
+                <span style={{ color:GOLD }}>Weight<br />Management</span>{' '}Supplements
               </h1>
-              <p className="text-white/85 text-base leading-relaxed mb-6 max-w-[460px]">
-                Burn more calories with Singapore's #1 weight management supplements. Elevate your expectations with our meticulously crafted formula — join others towards a healthier you.
+              <p style={{ fontSize:16, maxWidth:460, color:'rgba(255,255,255,.85)', marginBottom:22, lineHeight:1.55 }}>
+                Burn more calories with Singapore's #1 weight management supplements. Elevate your expectations with our meticulously crafted formula join others towards a healthier you.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <a href="#catalog" className="inline-flex items-center justify-center gap-2 bg-white text-brand-red font-bold text-sm px-6 py-3 rounded-full border-2 border-white hover:bg-g100 transition-all">
+              <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+                <a href="#catalog" onClick={e => { e.preventDefault(); toCatalog('all') }}
+                  style={{ ...BTN_PRIMARY, background:WHITE, color:RED, borderColor:WHITE }}>
                   Shop All Products
                 </a>
-                <Link to="/pages/find-your-fit" className="inline-flex items-center justify-center gap-2 text-white font-bold text-sm px-6 py-3 rounded-full border-2 border-white/60 hover:bg-white hover:text-brand-red transition-all">
+                <Link to="/pages/find-your-fit"
+                  style={{ ...BTN_GHOST, color:WHITE, borderColor:'rgba(255,255,255,.6)' }}>
                   Find Your Fit →
                 </Link>
               </div>
-
-              {/* Social proof pills */}
-              <div className="flex flex-wrap gap-3 mt-7">
-                <span className="bg-white/10 text-white/90 text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">🏆 150,000+ Boxes Sold</span>
-                <span className="bg-white/10 text-white/90 text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">🛒 Shopee #1 Ranked</span>
-              </div>
             </div>
-
-            {/* Right — product visual */}
-            <div className="flex justify-center md:justify-end">
-              <div className="relative">
-                <div className="w-[240px] h-[300px] md:w-[300px] md:h-[380px] rounded-3xl overflow-hidden border-2 border-white/20 shadow-2xl bg-white/10 flex items-center justify-center">
-                  <img
-                    src="https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500"
-                    alt="Shortcutx Max+ Fat Burner"
-                    className="w-full h-full object-contain p-4"
-                  />
-                </div>
-                {/* Floating badge */}
-                <div className="absolute -top-3 -right-4 bg-white rounded-2xl shadow-lg px-3 py-2 border border-g100">
-                  <p className="font-black text-brand-red text-base leading-tight">−4.2 kg</p>
-                  <p className="text-[11px] text-g500">avg in 30 days</p>
-                </div>
+            <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <div className="product-shot-float"
+                style={{ position:'relative', zIndex:1, width:'100%', maxWidth:400, aspectRatio:'1/1', borderRadius:16, overflow:'hidden', boxShadow:'0 40px 80px rgba(0,0,0,.35)' }}>
+                <img src="https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600" alt="Max+ Fat Burner"
+                  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              </div>
+              <div className="float-badge-b1"
+                style={{ position:'absolute', top:-14, left:-14, zIndex:2, background:WHITE, border:`1px solid ${G200}`, borderRadius:30, padding:'10px 16px', fontFamily:'Poppins,monospace', fontSize:14, fontWeight:600, boxShadow:'0 10px 24px rgba(0,0,0,.18)', display:'flex', alignItems:'center', gap:6, color:G900, whiteSpace:'nowrap' }}>
+                <span className="pulse-dot" style={{ width:7, height:7, borderRadius:'50%', background:RED, display:'inline-block', flexShrink:0 }} />
+                150,000+ boxes sold
+              </div>
+              <div className="float-badge-b2"
+                style={{ position:'absolute', bottom:-14, right:-14, zIndex:2, background:WHITE, border:`1px solid ${G200}`, borderRadius:30, padding:'10px 16px', fontFamily:'Poppins,monospace', fontSize:14, fontWeight:600, boxShadow:'0 10px 24px rgba(0,0,0,.18)', color:G900, whiteSpace:'nowrap' }}>
+                🇸🇬 Shopee #1 Ranked
               </div>
             </div>
           </div>
-        </Wrap>
-      </section>
 
-      {/* TRUST BAR */}
-      <section className="bg-g900 py-4">
-        <Wrap>
-          <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 text-white/75 text-[12px] font-semibold tracking-[.1em] uppercase">
-            {[
-              { icon: '🇬🇧', label: 'UK Manufacturing' },
-              { icon: '🔬', label: 'Clinically Studied' },
-              { icon: '🕌', label: 'Halal-Conscious' },
-              { icon: '🚚', label: 'Free Shipping Over $100' },
-            ].map(item => (
-              <span key={item.label} className="flex items-center gap-2">
-                <span>{item.icon}</span>
-                {item.label}
-              </span>
-            ))}
-          </div>
-        </Wrap>
-      </section>
-
-      {/* EXPERTLY FORMULATED */}
-      <section className="py-16 bg-white">
-        <Wrap className="grid md:grid-cols-2 gap-14 items-center">
-          <div>
-            <Eyebrow>Expertly Formulated</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] leading-[1.04] text-g900 mt-2 mb-4">
-              Elevate your expectations<br />with our meticulously<br />crafted formula.
-            </h2>
-            <p className="text-g700 text-base leading-relaxed mb-6">
-              No proprietary blends, no hidden doses. Every active in our formulas is chosen for a specific, evidence-backed reason — at doses that actually work. Our formulas are developed in Singapore with licensed nutritionists and reviewed against peer-reviewed studies.
-            </p>
-            <Link to="/pages/the-science" className="inline-flex items-center gap-2 text-brand-red font-bold text-sm hover:underline">
-              See the Full Ingredient List →
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { stat: '17+', label: 'Active ingredients in Max Plus' },
-              { stat: '100%', label: 'Halal & UK manufactured' },
-              { stat: '4.9★', label: 'Average customer rating' },
-              { stat: '150K+', label: 'Boxes sold in Singapore' },
-            ].map(item => (
-              <div key={item.stat} className="bg-brand-red-pale rounded-2xl p-5">
-                <p className="font-black text-3xl text-brand-red">{item.stat}</p>
-                <p className="text-[13px] text-g700 mt-1 leading-snug">{item.label}</p>
+          {/* Cat-strip */}
+          <div style={{ position:'relative', zIndex:1, display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14 }}>
+            {catChips.map(c => (
+              <div key={c.tab} onClick={() => toCatalog(c.tab)}
+                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, padding:12, display:'flex', alignItems:'center', gap:14, cursor:'pointer', transition:'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-6px)'; e.currentTarget.style.boxShadow='0 20px 34px rgba(0,0,0,.1)'; e.currentTarget.style.borderColor=RED }}
+                onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor=G200 }}
+              >
+                <img src={c.img} alt={c.label} style={{ width:76, height:76, minWidth:76, borderRadius:8, objectFit:'cover', display:'block' }} />
+                <div>
+                  <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:16, color:G900 }}>{c.label}</div>
+                  <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:G500, marginTop:3 }}>{c.count}</div>
+                </div>
               </div>
             ))}
           </div>
-        </Wrap>
+        </div>
       </section>
 
-      {/* QUIZ CTA */}
-      <section className="bg-g900 py-16">
-        <Wrap className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="text-[13px] font-bold tracking-[.16em] uppercase text-white/50 mb-3 block">Free Nutritionist Quiz</span>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-white leading-[1.04] mb-4">
-              Built with our nutritionist.<br />For you.
-            </h2>
-            <p className="text-white/70 text-base leading-relaxed mb-7 max-w-[440px]">
-              Not sure where to start? Take our 2-minute quiz and speak with our in-house nutritionist — for free. We'll match you with the right products for your body and goals.
-            </p>
-            <Link to="/pages/find-your-fit" className="inline-flex items-center justify-center gap-2 bg-brand-red text-white font-bold text-sm px-7 py-3 rounded-full hover:bg-brand-red-dark transition-all">
-              Take the Quiz →
-            </Link>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {['Lose Weight', 'Feel Energised', 'Better Sleep', 'Reduce Bloating', 'Build Muscle', 'Full Detox'].map(goal => (
-              <div key={goal} className="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
-                <p className="text-white/80 text-[13px] font-semibold leading-snug">{goal}</p>
+      {/* ===== MARQUEE ===== */}
+      <div style={{ background:G900, color:WHITE, overflow:'hidden', whiteSpace:'nowrap', padding:'13px 0' }}>
+        <div className="marquee-track">
+          {['SCIENCE BACKED SUPPLEMENTS','CLINICALLY STUDIED INGREDIENTS','BUNDLE & SAVE','FREE SHIPPING FOR ORDERS ABOVE $100',
+            'SCIENCE BACKED SUPPLEMENTS','CLINICALLY STUDIED INGREDIENTS','BUNDLE & SAVE','FREE SHIPPING FOR ORDERS ABOVE $100'].map((txt, i) => (
+            <span key={i}>
+              <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:16, textTransform:'uppercase', margin:'0 24px', letterSpacing:'.02em' }}>{txt}</span>
+              <span style={{ color:RED_LIGHT, margin:'0 24px', fontWeight:800, fontSize:16 }}>✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ===== TRUST ROW ===== */}
+      <section style={{ padding:'38px 0', borderBottom:`1px solid ${G200}` }}>
+        <div style={WRAP}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20, textAlign:'center' }}>
+            {[
+              { ic:'🇬🇧', t:'Formulated & Manufactured in the UK', s:'Rigorously tested, researched & developed' },
+              { ic:'🔬', t:'Clinically Studied Ingredients',        s:'KSM-66®, Morosil®, Satireal™' },
+              { ic:'🕌', t:'Halal-Conscious Formulation',           s:'Made with halal dietary needs in mind' },
+              { ic:'🚚', t:'Free Shipping S$100+',                   s:'Subscribe & save 15%, cancel anytime' },
+            ].map(item => (
+              <div key={item.t}
+                onMouseEnter={e => e.currentTarget.style.transform='translateY(-4px)'}
+                onMouseLeave={e => e.currentTarget.style.transform=''}
+                style={{ transition:'transform .2s ease' }}>
+                <div style={{ fontSize:28, marginBottom:8 }}>{item.ic}</div>
+                <div style={{ fontWeight:700, fontSize:14, marginBottom:3, color:G900 }}>{item.t}</div>
+                <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:G500 }}>{item.s}</div>
               </div>
             ))}
           </div>
-        </Wrap>
+        </div>
       </section>
 
-      {/* SHOP BY GOAL */}
-      <section className="py-16 bg-white">
-        <Wrap>
-          <div className="mb-10">
-            <Eyebrow>01 Shop by Goal</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04] mt-2">
-              Every goal,<br />one home page.
-            </h2>
-            <p className="text-g700 text-base mt-3 max-w-[520px]">
-              Tell us what's bothering you tonight and we'll point you to the right formula — no scrolling through the whole catalog required.
-            </p>
+      {/* ===== EXPERTLY FORMULATED ===== */}
+      <section style={{ padding:'70px 0' }}>
+        <div style={WRAP}>
+          <div style={{ textAlign:'center', marginBottom:38 }}>
+            <span style={EYEBROW}>Expertly Formulated</span>
+            <h2 style={{ ...H2, marginLeft:'auto', marginRight:'auto' }}>Elevate your expectations<br />with our meticulously crafted formula.</h2>
+            <p style={{ ...P_BODY, maxWidth:600, marginLeft:'auto', marginRight:'auto' }}>We spared no expense in sourcing the highest quality ingredients, ensuring an unparalleled experience of efficacy and indulgence.</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {goalCategories.map(cat => (
-              <a
-                key={cat.tab}
-                href="#catalog"
-                onClick={() => setActiveTab(cat.label)}
-                className="group block bg-g100 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-g200">
-                  <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-black text-g900 text-base">{cat.label}</h3>
-                    <span className="text-brand-red font-bold">→</span>
-                  </div>
-                  <p className="text-g500 text-[13px] leading-snug mb-2">{cat.desc}</p>
-                  <span className="text-[12px] font-semibold text-brand-red">{cat.count}</span>
-                </div>
-              </a>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20, textAlign:'center' }}>
+            {[
+              { ic:'🏆', t:'Quality Ingredients', s:'We meticulously source and select only the finest, premium-grade components from around the world.' },
+              { ic:'📦', t:'Convenient',           s:'Effortlessly incorporate it into your daily regimen for all your weight loss goals.' },
+              { ic:'🏭', t:'UK Factory Tour',      s:'Formulated and manufactured all the way in the United Kingdom to make you feel full longer.' },
+              { ic:'🧪', t:'Tested & Proven',      s:'Rigorous testing, research and development to ensure results can be seen, not just dreamed of.' },
+            ].map(item => (
+              <div key={item.t}
+                onMouseEnter={e => e.currentTarget.style.transform='translateY(-4px)'}
+                onMouseLeave={e => e.currentTarget.style.transform=''}
+                style={{ transition:'transform .2s ease' }}>
+                <div style={{ fontSize:28, marginBottom:8 }}>{item.ic}</div>
+                <div style={{ fontWeight:700, fontSize:14, marginBottom:3, color:G900 }}>{item.t}</div>
+                <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:G500 }}>{item.s}</div>
+              </div>
             ))}
           </div>
-        </Wrap>
+        </div>
       </section>
 
-      {/* FULL CATALOG */}
-      <section id="catalog" className="py-16 bg-brand-off">
-        <Wrap>
-          <div className="mb-8">
-            <Eyebrow>02 The Full Range</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04] mt-2">
-              Everything<br />we sell, browsable.
-            </h2>
-            <p className="text-g700 text-base mt-3 max-w-[520px]">
-              Fat burners, slimming drinks, meal replacements, and wellness rituals — everything we make, in one place, no digging required.
-            </p>
+      {/* ===== QUIZ CTA ===== */}
+      <section id="quiz" style={{ position:'relative', overflow:'hidden', background:RED, color:WHITE, padding:'64px 0' }}>
+        <div style={{ position:'absolute', borderRadius:'50%', width:420, height:420, background:'rgba(255,255,255,.1)', top:-200, right:-150, opacity:.12, pointerEvents:'none' }} />
+        <div style={WRAP}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:40, flexWrap:'wrap' }}>
+            <div style={{ flex:1, minWidth:280 }}>
+              <span style={{ ...EYEBROW, color:'#ffd4d2' }}>Find Your Fit</span>
+              <h2 style={{ ...H2, color:WHITE }}>Built with our<br />nutritionist. For you.</h2>
+              <p style={{ color:'rgba(255,255,255,.85)', fontSize:14, lineHeight:1.6, marginBottom:22, maxWidth:480 }}>
+                A few quick questions about your goals, your days, and your sleep under two minutes, no measuring tape required.
+              </p>
+              <div style={{ display:'flex', alignItems:'center', gap:14, background:'rgba(255,255,255,.1)', borderRadius:10, padding:'14px 18px', border:'1px solid rgba(255,255,255,.2)', width:'fit-content' }}>
+                <div style={{ fontSize:32 }}>⚕️</div>
+                <div>
+                  <div style={{ fontWeight:800, fontSize:14, color:WHITE }}>[Nutritionist Name] <span style={{ color:GOLD }}>✓ Verified</span></div>
+                  <div style={{ fontSize:12, color:'rgba(255,255,255,.7)', marginTop:2 }}>[Credential e.g. Registered Dietitian, Singapore Nutrition and Dietetics Association]</div>
+                </div>
+              </div>
+            </div>
+            <Link to="/pages/find-your-fit"
+              style={{ fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'inline-flex', alignItems:'center', gap:8, cursor:'pointer', background:WHITE, color:RED, border:`2px solid ${WHITE}`, transition:'.2s', textDecoration:'none', whiteSpace:'nowrap' }}>
+              Take the 2-Minute Quiz →
+            </Link>
           </div>
-          {/* Filter tabs */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {tabs.map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${activeTab === tab ? 'bg-brand-red text-white' : 'bg-white text-g700 border border-g200 hover:border-brand-red hover:text-brand-red'}`}
+        </div>
+      </section>
+
+      {/* ===== SHOP BY GOAL ===== */}
+      <section style={{ padding:'70px 0' }}>
+        <div style={WRAP}>
+          <div style={{ marginBottom:38 }}>
+            <span style={EYEBROW}>01 Shop by Goal</span>
+            <h2 style={H2}>Every goal,<br />one home page.</h2>
+            <p style={{ ...P_BODY, maxWidth:540 }}>Tell us what's bothering you tonight and we'll point you to the right formula no scrolling through the whole catalog required.</p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }}>
+            {goalCards.map(g => (
+              <div key={g.title} onClick={() => toCatalog(g.tab)}
+                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, overflow:'hidden', cursor:'pointer', position:'relative', display:'flex', flexDirection:'column', transition:'transform .25s ease, box-shadow .25s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-8px)'; e.currentTarget.style.boxShadow='0 26px 40px rgba(0,0,0,.14)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='' }}
               >
-                {tab}
+                <div style={{ height:130, overflow:'hidden' }}>
+                  <img src={g.img} alt={g.title} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                </div>
+                <div style={{ position:'absolute', top:12, right:12, width:30, height:30, borderRadius:'50%', background:'rgba(255,255,255,.9)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, zIndex:2 }}>→</div>
+                <div style={{ padding:'18px 18px 20px', flex:1, display:'flex', flexDirection:'column' }}>
+                  <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:19, marginBottom:6, color:G900 }}>{g.title}</h3>
+                  <p style={{ fontSize:14, color:G700, marginBottom:10, flex:1, lineHeight:1.5 }}>{g.desc}</p>
+                  <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:RED, fontWeight:600 }}>{g.count}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FULL CATALOG ===== */}
+      <section id="catalog" style={{ background:OFF, padding:'70px 0' }}>
+        <div style={WRAP}>
+          <div style={{ marginBottom:38 }}>
+            <span style={EYEBROW}>02 The Full Range</span>
+            <h2 style={H2}>Everything<br />we sell, browsable.</h2>
+            <p style={{ ...P_BODY, maxWidth:560 }}>Fat burners, slimming drinks, meal replacements, and wellness rituals everything we make, in one place, no digging required.</p>
+          </div>
+          <div style={{ display:'flex', gap:8, marginBottom:34, flexWrap:'wrap' }}>
+            {[{k:'all',label:'All Products'},{k:'burn',label:'Fat Burners'},{k:'slim',label:'Slimming Drinks'},{k:'well',label:'Wellness'},{k:'bundle',label:'Bundles'}].map(t => (
+              <button key={t.k} onClick={() => setActiveTab(t.k)}
+                style={{ fontFamily:'Poppins,monospace', fontSize:14, textTransform:'uppercase', letterSpacing:'.04em', padding:'10px 18px', border:`1.5px solid ${activeTab===t.k ? G900 : G300}`, borderRadius:20, cursor:'pointer', background:activeTab===t.k ? G900 : 'transparent', color:activeTab===t.k ? WHITE : G900, transition:'.15s' }}>
+                {t.label}
               </button>
             ))}
           </div>
-          {/* Product grid placeholder */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { name: 'Max+ Fat Burner Juice', subtitle: 'Berry Punch', price: '$34', badge: 'Best Seller', img: 'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500' },
-              { name: 'Max Fat Burner', subtitle: 'Blackcurrant Flavour', price: '$34', badge: null, img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500' },
-              { name: 'Night Hot Chocolate', subtitle: 'Wellness & Sleep', price: '$34', badge: 'NEW', img: 'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500' },
-              { name: 'Goal Stack Bundle', subtitle: 'Fat Burner + Slimming', price: '$89', badge: 'Save 20%', img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
-            ].map(product => (
-              <div key={product.name} className="bg-white rounded-2xl overflow-hidden border border-g200 hover:shadow-md transition-all group">
-                <div className="relative aspect-square overflow-hidden bg-g100">
-                  {product.badge && (
-                    <span className="absolute top-3 left-3 z-10 bg-brand-red text-white text-[11px] font-bold px-2.5 py-1 rounded-full">
-                      {product.badge}
-                    </span>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }}>
+            {visible.map((p, i) => (
+              <div key={`${p.name}-${i}`}
+                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, overflow:'hidden', transition:'transform .25s ease, box-shadow .25s ease', position:'relative' }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform='translateY(-8px)'
+                  e.currentTarget.style.boxShadow='0 22px 36px rgba(0,0,0,.12)'
+                  const q = e.currentTarget.querySelector('.quickadd')
+                  if (q) { q.style.opacity=1; q.style.transform='translateY(0) scale(1)' }
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform=''
+                  e.currentTarget.style.boxShadow=''
+                  const q = e.currentTarget.querySelector('.quickadd')
+                  if (q) { q.style.opacity=0; q.style.transform='translateY(8px) scale(.8)' }
+                }}
+              >
+                <div style={{ aspectRatio:'1/1', position:'relative', overflow:'hidden', background:OFF, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  {p.badge && <div style={{ position:'absolute', top:10, left:10, background:RED, color:WHITE, fontFamily:'Poppins,monospace', fontSize:14, fontWeight:700, padding:'4px 9px', borderRadius:12, zIndex:2 }}>{p.badge}</div>}
+                  <img src={p.img} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'contain', padding:14 }} />
+                  <button className="quickadd" onClick={e => e.stopPropagation()}
+                    style={{ position:'absolute', bottom:10, right:10, width:34, height:34, borderRadius:'50%', background:G900, color:WHITE, border:'none', fontSize:16, cursor:'pointer', opacity:0, transform:'translateY(8px) scale(.8)', transition:'.2s', zIndex:2 }}>
+                    +
+                  </button>
+                </div>
+                <div style={{ padding:'14px 16px 16px' }}>
+                  <div style={{ fontWeight:700, fontSize:14, marginBottom:4, lineHeight:1.3, color:G900 }}>{p.name}</div>
+                  <div style={{ fontSize:14, color:RED, marginBottom:6 }}>★★★★★</div>
+                  {p.perDay ? (
+                    <>
+                      <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:16, color:RED }}>
+                        From ${p.perDay}<span style={{ fontWeight:600, fontSize:12, color:G500 }}>/day</span>
+                      </div>
+                      <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:G500, marginTop:2 }}>
+                        {p.price}{!p.confirmed && <span style={{ color:G300 }}> · est.</span>}
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:G900, fontWeight:600 }}>{p.price}</div>
                   )}
-                  <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-4">
-                  <p className="text-[11px] text-g500 font-semibold uppercase tracking-wider mb-1">{product.subtitle}</p>
-                  <h3 className="font-black text-g900 text-base leading-snug mb-3">{product.name}</h3>
-                  <div className="flex items-center justify-between">
-                    <span className="font-black text-xl text-g900">{product.price}</span>
-                    <button className="bg-brand-red text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-brand-red-dark transition-colors">
-                      Add to Cart
-                    </button>
-                  </div>
                 </div>
               </div>
             ))}
           </div>
-        </Wrap>
+          <p style={{ marginTop:18, color:G500, fontSize:14 }}>Per-day pricing is based on the pack's lowest listed price. Marked "est." where the exact daily serving count needs confirming.</p>
+        </div>
       </section>
 
-      {/* TIERED BESTSELLERS */}
-      <section className="py-16 bg-g900">
-        <Wrap>
-          <div className="text-center mb-12">
-            <span className="text-[13px] font-bold tracking-[.16em] uppercase text-[#ff8a86] mb-3 block">03 Start Here</span>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-white leading-[1.04]">
-              New here?<br />Three ways to begin.
-            </h2>
-            <p className="text-white/65 text-base mt-4 max-w-[480px] mx-auto">
-              Whether you're just curious or ready to commit, there's a way in that fits — try one, subscribe for less, or go all in with a bundle.
-            </p>
+      {/* ===== TIERED BESTSELLERS ===== */}
+      <section style={{ background:G900, padding:'70px 0' }}>
+        <div style={WRAP}>
+          <div style={{ textAlign:'center', marginBottom:38 }}>
+            <span style={{ ...EYEBROW, color:'#ff8a86' }}>03 Start Here</span>
+            <h2 style={{ ...H2, color:WHITE, marginLeft:'auto', marginRight:'auto' }}>New here?<br />Three ways to begin.</h2>
+            <p style={{ ...P_BODY, color:'rgba(255,255,255,.65)', maxWidth:560, marginLeft:'auto', marginRight:'auto' }}>Whether you're just curious or ready to commit, there's a way in that fits try one, subscribe for less, or go all in with a bundle.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20, alignItems:'start' }}>
+            {/* Single Pack */}
+            <div
+              onMouseEnter={e => e.currentTarget.style.transform='translateY(-6px)'}
+              onMouseLeave={e => e.currentTarget.style.transform=''}
+              style={{ background:OFF, border:`1px solid ${G200}`, borderRadius:12, padding:26, position:'relative', transition:'transform .25s ease' }}>
+              <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:RED, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:8, fontWeight:600 }}>Just Getting Started</div>
+              <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:22, marginBottom:10, color:G900 }}>Single Pack</h3>
+              <p style={{ fontSize:14, color:G700, marginBottom:16, lineHeight:1.5 }}>Try one formula, no commitment. Perfect for a first-time buyer testing the waters.</p>
+              <ul style={{ marginBottom:20, padding:0 }}>
+                {['Any single product, one-time purchase','Full ingredient transparency','Free shipping above $100'].map(li => (
+                  <li key={li} style={{ listStyle:'none', fontSize:14, padding:'6px 0', borderBottom:`1px solid ${G200}`, display:'flex', gap:8 }}><span style={{ color:RED, fontWeight:800 }}>✓</span>{li}</li>
+                ))}
+              </ul>
+              <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:16 }}>
+                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:26, color:G900 }}>From $22</span>
+              </div>
+              <a href="#catalog" onClick={e=>{e.preventDefault();toCatalog('all')}}
+                style={{ display:'block', textAlign:'center', background:G900, color:WHITE, fontWeight:700, padding:13, borderRadius:8, transition:'.2s', textDecoration:'none', fontSize:14 }}>Shop Singles</a>
+            </div>
+            {/* Monthly Ritual – featured */}
+            <div
+              onMouseEnter={e => e.currentTarget.style.transform='scale(1.03) translateY(-6px)'}
+              onMouseLeave={e => e.currentTarget.style.transform='scale(1.03)'}
+              style={{ background:OFF, border:`2px solid ${RED}`, borderRadius:12, padding:26, position:'relative', transform:'scale(1.03)', transition:'transform .25s ease' }}>
+              <div style={{ position:'absolute', top:-13, left:24, background:RED, color:WHITE, fontFamily:'Poppins,monospace', fontSize:14, fontWeight:700, padding:'5px 12px', borderRadius:14, letterSpacing:'.05em' }}>MOST POPULAR</div>
+              <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:RED, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:8, fontWeight:600 }}>Subscribe &amp; Save</div>
+              <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:22, marginBottom:10, color:G900 }}>Monthly Ritual</h3>
+              <p style={{ fontSize:14, color:G700, marginBottom:16, lineHeight:1.5 }}>Lock in 15% off and never run out. Pause, skip, or cancel anytime no phone calls.</p>
+              <ul style={{ marginBottom:20, padding:0 }}>
+                {['15% off every recurring order','Priority stock on new launches','Free shipping above $100'].map(li => (
+                  <li key={li} style={{ listStyle:'none', fontSize:14, padding:'6px 0', borderBottom:`1px solid ${G200}`, display:'flex', gap:8 }}><span style={{ color:RED, fontWeight:800 }}>✓</span>{li}</li>
+                ))}
+              </ul>
+              <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:16 }}>
+                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:26, color:G900 }}>Save 15%</span>
+                <span style={{ fontSize:14, textDecoration:'line-through', color:G500 }}>vs. one-time</span>
+              </div>
+              <a href="#catalog" onClick={e=>{e.preventDefault();toCatalog('all')}}
+                style={{ display:'block', textAlign:'center', background:RED, color:WHITE, fontWeight:700, padding:13, borderRadius:8, transition:'.2s', textDecoration:'none', fontSize:14 }}>Start Subscription</a>
+            </div>
+            {/* Goal Stack Bundle */}
+            <div
+              onMouseEnter={e => e.currentTarget.style.transform='translateY(-6px)'}
+              onMouseLeave={e => e.currentTarget.style.transform=''}
+              style={{ background:OFF, border:`1px solid ${G200}`, borderRadius:12, padding:26, position:'relative', transition:'transform .25s ease' }}>
+              <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:RED, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:8, fontWeight:600 }}>Go All In</div>
+              <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:22, marginBottom:10, color:G900 }}>Goal Stack Bundle</h3>
+              <p style={{ fontSize:14, color:G700, marginBottom:16, lineHeight:1.5 }}>Combine a Fat Burner + Slimming Drink + Wellness formula into one daily stack.</p>
+              <ul style={{ marginBottom:20, padding:0 }}>
+                {['Up to 20% off vs. buying separately','One checkout, one delivery','Best for full lifestyle resets'].map(li => (
+                  <li key={li} style={{ listStyle:'none', fontSize:14, padding:'6px 0', borderBottom:`1px solid ${G200}`, display:'flex', gap:8 }}><span style={{ color:RED, fontWeight:800 }}>✓</span>{li}</li>
+                ))}
+              </ul>
+              <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:16 }}>
+                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:26, color:G900 }}>Save 20%</span>
+                <span style={{ fontSize:14, textDecoration:'line-through', color:G500 }}>on bundles</span>
+              </div>
+              <a href="#catalog" onClick={e=>{e.preventDefault();toCatalog('bundle')}}
+                style={{ display:'block', textAlign:'center', background:G900, color:WHITE, fontWeight:700, padding:13, borderRadius:8, transition:'.2s', textDecoration:'none', fontSize:14 }}>Build My Stack</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== INGREDIENTS ===== */}
+      <section style={{ background:OFF, padding:'64px 0' }}>
+        <div style={WRAP}>
+          <div style={{ marginBottom:28 }}>
+            <span style={EYEBROW}>04 What's Actually Inside</span>
+            <h2 style={H2}>The actives<br />doing the work.</h2>
+            <p style={{ ...P_BODY, maxWidth:480 }}>No proprietary blends, no hidden doses six of the actives across our range.</p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:14 }}>
             {[
-              {
-                tier: 'Just Getting Started',
-                heading: 'Single Pack',
-                desc: 'Try one formula, no commitment. Perfect for a first-time buyer testing the waters.',
-                items: ['Any single product, one-time purchase', 'Full ingredient transparency', 'Free shipping above $100'],
-                price: 'From $22',
-                featured: false,
-              },
-              {
-                tier: 'Subscribe & Save',
-                heading: 'Monthly Ritual',
-                desc: 'Lock in 15% off and never run out. Pause, skip, or cancel anytime — no phone calls.',
-                items: ['15% off every recurring order', 'Priority stock on new launches', 'Free shipping above $100'],
-                price: 'Save 15%',
-                featured: true,
-                tag: 'MOST POPULAR',
-              },
-              {
-                tier: 'Go All In',
-                heading: 'Goal Stack Bundle',
-                desc: 'Combine a Fat Burner + Slimming Drink + Wellness formula into one daily stack.',
-                items: ['Up to 20% off vs. buying separately', 'One checkout, one delivery', 'Best for full lifestyle resets'],
-                price: 'Save 20%',
-                featured: false,
-              },
-            ].map(card => (
-              <div key={card.heading} className={`rounded-2xl p-6 flex flex-col relative ${card.featured ? 'bg-brand-red' : 'bg-white/5 border border-white/10'}`}>
-                {card.tag && (
-                  <span className="absolute -top-3 left-6 bg-brand-gold text-g900 text-[11px] font-black px-3 py-1 rounded-full tracking-widest">
-                    {card.tag}
-                  </span>
-                )}
-                <p className={`text-[12px] font-bold tracking-[.12em] uppercase mb-2 ${card.featured ? 'text-white/70' : 'text-white/50'}`}>{card.tier}</p>
-                <h3 className="font-black text-white text-2xl mb-3">{card.heading}</h3>
-                <p className={`text-[14px] leading-relaxed mb-4 ${card.featured ? 'text-white/80' : 'text-white/60'}`}>{card.desc}</p>
-                <ul className="space-y-2 mb-6 flex-1">
-                  {card.items.map(item => (
-                    <li key={item} className={`flex items-start gap-2 text-[13px] ${card.featured ? 'text-white/90' : 'text-white/70'}`}>
-                      <span className="text-brand-gold mt-0.5">✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mb-4">
-                  <span className={`font-black text-2xl ${card.featured ? 'text-white' : 'text-white'}`}>{card.price}</span>
-                </div>
-                <a href="#catalog" className={`text-center py-3 rounded-full font-bold text-sm transition-all ${card.featured ? 'bg-white text-brand-red hover:bg-g100' : 'border border-white/30 text-white hover:bg-white/10'}`}>
-                  {card.heading === 'Single Pack' ? 'Shop Singles' : card.heading === 'Monthly Ritual' ? 'Start Subscription' : 'Build My Stack'}
-                </a>
+              { ic:'🌿', n:'KSM-66® Ashwagandha', d:'Relaxation' },
+              { ic:'🍊', n:'Morosil®',             d:'Fat metabolism' },
+              { ic:'☕', n:'Green Coffee Extract', d:'Energy metabolism' },
+              { ic:'🍵', n:'Chamomile Extract',    d:'Calm' },
+              { ic:'🦠', n:'FOS Prebiotic',        d:'Gut health' },
+              { ic:'🥤', n:'30+ Active Formulas',  d:'Across the range' },
+            ].map(item => (
+              <div key={item.n}
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.borderColor=RED }}
+                onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor=G200 }}
+                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:8, padding:'16px 10px', textAlign:'center', transition:'transform .2s ease, border-color .2s ease' }}>
+                <div style={{ fontSize:24, marginBottom:8 }}>{item.ic}</div>
+                <div style={{ fontWeight:700, fontSize:14, marginBottom:3, lineHeight:1.25, color:G900 }}>{item.n}</div>
+                <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:G500 }}>{item.d}</div>
               </div>
             ))}
           </div>
-        </Wrap>
+          <a href="https://shortcutx.co/pages/the-product"
+            style={{ ...BTN_GHOST, marginTop:26 }}>See the Full Ingredient List →</a>
+        </div>
       </section>
 
-      {/* INGREDIENTS TEASER */}
-      <Section bg="off">
-        <Wrap>
-          <div className="mb-8">
-            <Eyebrow>04 What's Actually Inside</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04] mt-2">
-              The actives<br />doing the work.
-            </h2>
-            <p className="text-g700 text-base mt-3">
-              No proprietary blends, no hidden doses — six of the actives across our range.
-            </p>
+      {/* ===== BRAND COMPARISON ===== */}
+      <section style={{ background:OFF, padding:'64px 0', borderTop:`1px solid ${G200}` }}>
+        <div style={WRAP}>
+          <div style={{ marginBottom:28 }}>
+            <span style={EYEBROW}>05 How We Compare</span>
+            <h2 style={H2}>Not your average<br />supplement brand.</h2>
+            <p style={{ ...P_BODY, maxWidth:560 }}>Here's what you're actually getting when you choose Shortcutx over a typical off-the-shelf supplement.</p>
           </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {ingredients.map(ing => (
-              <div key={ing.name} className="bg-white rounded-xl p-5 border border-g200 flex items-center gap-4">
-                <span className="text-3xl shrink-0">{ing.icon}</span>
-                <div>
-                  <p className="font-black text-g900 text-sm">{ing.name}</p>
-                  <p className="text-g500 text-[13px]">{ing.benefit}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Link to="/pages/the-science" className="inline-flex items-center gap-2 mt-7 font-bold text-sm text-g900 border border-g900 px-6 py-3 rounded-full hover:bg-g900 hover:text-white transition-all">
-            See the Full Ingredient List →
-          </Link>
-        </Wrap>
-      </Section>
-
-      {/* BRAND COMPARISON */}
-      <Section bg="off">
-        <Wrap>
-          <div className="mb-8">
-            <Eyebrow>05 How We Compare</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04] mt-2">
-              Not your average<br />supplement brand.
-            </h2>
-            <p className="text-g700 text-base mt-3">
-              Here's what you're actually getting when you choose Shortcutx over a typical off-the-shelf supplement.
-            </p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[560px]">
+          <div style={{ overflowX:'auto' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse', minWidth:640 }}>
               <thead>
                 <tr>
-                  <th className="text-left py-3 px-4 text-[13px] font-bold text-g500 uppercase tracking-wider border-b border-g200 w-[30%]">What matters to you</th>
-                  <th className="py-3 px-4 text-[13px] font-bold uppercase tracking-wider border-b border-g200 bg-brand-red-pale text-brand-red w-[35%]">Shortcutx</th>
-                  <th className="py-3 px-4 text-[13px] font-bold text-g500 uppercase tracking-wider border-b border-g200 w-[35%]">Typical Brand</th>
+                  <th style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, textAlign:'left', fontFamily:'Poppins,monospace', fontSize:14, textTransform:'uppercase', letterSpacing:'.06em', color:G700, fontWeight:600 }}>What matters to you</th>
+                  <th style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, textAlign:'left', fontFamily:'Poppins,monospace', fontSize:14, textTransform:'uppercase', letterSpacing:'.06em', color:G700, fontWeight:600, background:RED_PALE }}>Shortcutx</th>
+                  <th style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, textAlign:'left', fontFamily:'Poppins,monospace', fontSize:14, textTransform:'uppercase', letterSpacing:'.06em', color:G700, fontWeight:600 }}>Typical Supplement Brand</th>
                 </tr>
               </thead>
               <tbody>
-                {compareRows.map((row, i) => (
-                  <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-g100/50'}>
-                    <td className="py-3 px-4 text-[14px] font-semibold text-g700 border-b border-g200">{row.feature}</td>
-                    <td className="py-3 px-4 text-[13px] text-g900 border-b border-g200 bg-brand-red-pale/40">
-                      <span className="text-green-600 font-bold mr-1">✓</span>{row.scx}
-                    </td>
-                    <td className="py-3 px-4 text-[13px] text-g500 border-b border-g200">
-                      <span className="text-g300 font-bold mr-1">✗</span>{row.other}
-                    </td>
+                {[
+                  { q:"How it's developed",     yes:"No OEM an in-house R&D process spanning months, testing multiple formulas until efficacy and efficiency are right", no:"Often OEM/white-label, same formula relabelled across brands" },
+                  { q:"Where it's made",        yes:"Formulated & manufactured in the UK", no:"Often unspecified origin" },
+                  { q:"What's actually in it",  yes:"Clinically studied actives, listed in full KSM-66®, Morosil®, Satireal™", no:"Proprietary blends, doses often undisclosed" },
+                  { q:"Choosing the right one", yes:"Free quiz built with a real nutritionist, matched to your goals", no:"Guess and hope, or read 40 reviews first" },
+                  { q:"Proof, not just promises", yes:"150,000+ boxes sold, #1 on Shopee Singapore, Watsons Singapore award winner", no:"Marketing claims, rarely independently verified" },
+                ].map(row => (
+                  <tr key={row.q}>
+                    <td style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, fontSize:14, color:G900 }}>{row.q}</td>
+                    <td style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, fontSize:14, background:RED_PALE, color:RED, fontWeight:700 }}>{row.yes}</td>
+                    <td style={{ padding:'16px 18px', borderBottom:`1px solid ${G200}`, fontSize:14, color:G500 }}>{row.no}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <Link to="/pages/the-science" className="inline-flex items-center gap-2 mt-6 font-bold text-sm text-g900 border border-g900 px-6 py-3 rounded-full hover:bg-g900 hover:text-white transition-all">
-            See the Full Comparison →
-          </Link>
-        </Wrap>
-      </Section>
+          <a href="https://shortcutx.co/pages/the-product" style={{ ...BTN_GHOST, marginTop:22 }}>See the Full Comparison →</a>
+        </div>
+      </section>
 
-      {/* STATS */}
-      <section className="bg-g900 py-16">
-        <Wrap>
-          <span className="text-[13px] font-bold tracking-[.16em] uppercase text-[#ff6b66] mb-3 block">06 Why Singapore Chooses Shortcutx</span>
-          <h2 className="font-black text-[clamp(26px,3.2vw,40px)] text-white leading-[1.04] mb-10">
-            Built to be felt,<br />not just claimed.
-          </h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map(stat => (
-              <div key={stat.num} className="border border-white/10 rounded-xl p-5">
-                <p className="font-black text-4xl text-white mb-2">{stat.num}</p>
-                <p className="text-white/60 text-[14px] leading-snug">{stat.label}</p>
-                <div className="mt-4 h-1 rounded-full bg-white/10">
-                  <div className="h-1 rounded-full bg-brand-red" style={{ width: stat.num === '#1' ? '100%' : stat.num === '150K+' ? '88%' : stat.num === '4.9★' ? '96%' : '60%' }} />
+      {/* ===== STATS ===== */}
+      <section ref={statsRef} style={{ background:G900, color:WHITE, padding:'80px 0' }}>
+        <div style={WRAP}>
+          <span style={{ fontFamily:'Poppins,monospace', fontWeight:700, fontSize:12, textTransform:'uppercase', letterSpacing:'.1em', color:'#ff6b66', display:'block', marginBottom:8 }}>06 Why Singapore Chooses Shortcutx</span>
+          <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(26px,3.2vw,40px)', color:WHITE, marginTop:10, lineHeight:1.1 }}>Built to be felt,<br />not just claimed.</h2>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:30, marginTop:44 }}>
+            {statsData.map((s, i) => (
+              <div key={s.label}>
+                <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:48, color:'#ff6b66', lineHeight:1 }}>
+                  {s.prefix}{s.target===4.9 ? counts[i].toFixed(1) : Math.floor(counts[i])}{s.suffix}
+                </div>
+                <div style={{ fontSize:14, color:'rgba(255,255,255,.65)', marginTop:8, maxWidth:190 }}>{s.label}</div>
+                <div style={{ height:5, background:'rgba(255,255,255,.15)', borderRadius:4, marginTop:14, overflow:'hidden' }}>
+                  <div className="stat-bar" style={{ width: barsOn ? s.barW : '0%' }} />
                 </div>
               </div>
             ))}
           </div>
-          <p className="text-white/40 text-[13px] mt-6">Real numbers, always. If we can't stand behind a figure, we won't publish it.</p>
-        </Wrap>
+          <div style={{ fontFamily:'Poppins,monospace', fontSize:14, color:'rgba(255,255,255,.4)', marginTop:34, maxWidth:640 }}>
+            Real numbers, always. If we can't stand behind a figure, we won't publish it.
+          </div>
+        </div>
       </section>
 
-      {/* TRUSTED BY */}
-      <section className="py-16 bg-white">
-        <Wrap>
-          <div className="text-center mb-10">
-            <span className="inline-block bg-brand-red text-white text-[11px] font-black tracking-[.16em] uppercase px-4 py-2 rounded-full mb-5">TRUSTED BY SINGAPORE</span>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04]">
+      {/* ===== TRUSTED BY ===== */}
+      <section style={{ background:`linear-gradient(180deg,${RED_DARK},${RED} 40%,${RED_DARK})`, padding:'80px 0 56px', overflow:'hidden' }}>
+        <div style={WRAP}>
+          <div style={{ textAlign:'center', marginBottom:44 }}>
+            <span style={{ display:'inline-block', background:'rgba(255,255,255,.12)', border:'1px solid rgba(255,255,255,.2)', color:WHITE, fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, letterSpacing:'.08em', padding:'8px 20px', borderRadius:20, marginBottom:22 }}>TRUSTED BY SINGAPORE</span>
+            <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:'clamp(24px,3vw,34px)', color:'rgba(255,255,255,.92)', lineHeight:1.35, maxWidth:720, margin:'0 auto' }}>
               150,000+ Boxes. #1 On Shopee.<br />
-              <em className="not-italic text-brand-red">Backed By The Best.</em>
+              <span style={{ display:'block', fontFamily:"Georgia,'Times New Roman',serif", fontStyle:'italic', fontWeight:400, color:GOLD, fontSize:'1.15em', marginTop:6 }}>Backed By The Best.</span>
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
-            {ambassadors.map(amb => (
-              <div key={amb.name} className="rounded-2xl overflow-hidden border border-g200">
-                <div className="h-36 flex items-center justify-center text-5xl" style={{ background: amb.bg }}>
-                  {amb.emoji}
-                </div>
-                <div className="p-4">
-                  <p className="font-black text-g900 text-sm leading-snug mb-1">{amb.name}</p>
-                  <p className="text-g500 text-[12px] leading-snug mb-2">{amb.role}</p>
-                  <span className="bg-g100 text-g700 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">BRAND PARTNER</span>
+          <div style={{ display:'flex', gap:20, overflowX:'auto', scrollSnapType:'x mandatory', paddingBottom:20, scrollbarWidth:'none' }}>
+            {ambassadors.map(a => (
+              <div key={a.name}
+                onMouseEnter={e => e.currentTarget.style.transform='translateY(-6px)'}
+                onMouseLeave={e => e.currentTarget.style.transform=''}
+                style={{ flex:'0 0 240px', background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.15)', borderRadius:12, overflow:'hidden', transition:'transform .25s ease', scrollSnapAlign:'start' }}>
+                <div style={{ aspectRatio:'1/1', display:'flex', alignItems:'center', justifyContent:'center', background:a.grad, fontSize:44 }}>{a.emoji}</div>
+                <div style={{ padding:'18px 18px 20px' }}>
+                  <div style={{ fontWeight:800, fontSize:16, color:a.tbc?'#ffb3b0':WHITE, marginBottom:5, lineHeight:1.3, fontStyle:a.tbc?'italic':'normal' }}>{a.name}</div>
+                  <div style={{ fontSize:12, color:a.tbc?'#ffb3b0':'rgba(255,255,255,.65)', lineHeight:1.4, marginBottom:12, minHeight:32, fontStyle:a.tbc?'italic':'normal' }}>{a.role}</div>
+                  <span style={{ display:'inline-block', fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, letterSpacing:'.05em', color:WHITE, border:'1px solid rgba(255,255,255,.3)', padding:'5px 10px', borderRadius:20 }}>{a.tag}</span>
                 </div>
               </div>
             ))}
           </div>
-        </Wrap>
+        </div>
       </section>
 
-      {/* REAL RESULTS / TESTIMONIALS */}
-      <Section bg="off">
-        <Wrap>
-          <div className="text-center mb-10">
-            <Eyebrow>Real Results</Eyebrow>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-g900 leading-[1.04] mt-2">
-              10,000+ happy customers.
-            </h2>
+      {/* ===== FEATURED IN ===== */}
+      <section style={{ padding:'36px 0', borderBottom:`1px solid ${G200}`, textAlign:'center' }}>
+        <div style={WRAP}>
+          <div style={{ fontFamily:'Poppins,monospace', fontSize:12, letterSpacing:'.12em', color:G500, fontWeight:600, marginBottom:20 }}>AS FEATURED IN &amp; SEEN ON</div>
+          <img src="https://shortcutx.co/cdn/shop/files/featured_logos.png?width=900" alt="As featured in"
+            style={{ width:'100%', maxWidth:900, height:'auto', margin:'0 auto', opacity:.88 }}
+            onError={e => { e.target.style.display='none' }} />
+        </div>
+      </section>
+
+      {/* ===== REAL RESULTS ===== */}
+      <section style={{ background:OFF, padding:'64px 0' }}>
+        <div style={WRAP}>
+          <div style={{ marginBottom:28 }}>
+            <span style={EYEBROW}>08 Real Results</span>
+            <h2 style={H2}>Video stories from<br />actual customers.</h2>
+            <p style={{ ...P_BODY, maxWidth:520 }}>Real people, real routines, on camera watch the full set on your Real Results page.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map(t => (
-              <div key={t.name} className="bg-white rounded-2xl p-6 border border-g200">
-                <div className="text-brand-gold text-lg mb-3"><Stars count={t.stars} /></div>
-                <p className="text-g700 leading-relaxed mb-5 text-[15px]">"{t.text}"</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-g900 text-sm">{t.name}</p>
-                    <p className="text-[12px] text-g500">{t.product}</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }}>
+            {[0,1,2,3].map(i => (
+              <a key={i} href="https://shortcutx.co/pages/real-results"
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.boxShadow='0 20px 34px rgba(0,0,0,.18)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='' }}
+                style={{ aspectRatio:'3/4', borderRadius:12, background:`linear-gradient(150deg,${G900},${RED_DARK})`, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', cursor:'pointer', transition:'transform .25s ease, box-shadow .25s ease', textDecoration:'none' }}>
+                <span style={{ width:52, height:52, borderRadius:'50%', background:'rgba(255,255,255,.15)', border:'2px solid rgba(255,255,255,.4)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, color:WHITE }}>▶</span>
+              </a>
+            ))}
+          </div>
+          <a href="https://shortcutx.co/pages/real-results" style={{ ...BTN_GHOST, marginTop:22 }}>Watch All Real Results →</a>
+        </div>
+      </section>
+
+      {/* ===== SHORTCUTX IRL ===== */}
+      <section style={{ position:'relative', overflow:'hidden', padding:'64px 0', background:`linear-gradient(155deg,${G900} 55%,${RED_DARK} 140%)`, color:WHITE }}>
+        <div style={{ position:'absolute', width:420, height:420, borderRadius:'50%', background:RED_LIGHT, top:-180, right:-140, opacity:.14, pointerEvents:'none' }} />
+        <div style={WRAP}>
+          <div style={{ marginBottom:28 }}>
+            <img src="https://shortcutx.co/cdn/shop/files/irl_logo.png?v=1783492137&width=300" alt="Shortcutx IRL"
+              style={{ height:32, width:'auto', marginBottom:16, filter:'brightness(0) invert(1)' }}
+              onError={e => e.target.style.display='none'} />
+            <span style={{ ...EYEBROW, color:'#ff6b66' }}>09 Shortcutx IRL</span>
+            <h2 style={{ ...H2, color:WHITE }}>Momentum,<br />multiplied.</h2>
+            <p style={{ color:'rgba(255,255,255,.7)', fontSize:14, lineHeight:1.6, maxWidth:560 }}>From the screen to the streets this is Shortcutx, in real life. Train alongside real athletes, not just influencers on a screen.</p>
+          </div>
+          {/* Event card */}
+          <div
+            onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 24px 48px rgba(0,0,0,.3)'; e.currentTarget.style.borderColor='rgba(255,255,255,.3)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='rgba(255,255,255,.15)' }}
+            style={{ display:'grid', gridTemplateColumns:'380px 1fr', background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.15)', borderRadius:14, overflow:'hidden', position:'relative', zIndex:1, transition:'transform .25s ease, box-shadow .25s ease, border-color .25s ease' }}>
+            <div style={{ position:'relative', background:`linear-gradient(150deg,${RED},${RED_DARK})`, display:'flex', alignItems:'center', justifyContent:'center', minHeight:280, fontSize:64 }}>
+              🥊
+              <span style={{ position:'absolute', top:14, left:14, background:'rgba(255,255,255,.15)', backdropFilter:'blur(4px)', fontFamily:'Poppins,monospace', fontSize:12, fontWeight:600, letterSpacing:'.06em', padding:'6px 12px', borderRadius:20, color:WHITE }}>BOXING</span>
+            </div>
+            <div style={{ padding:'28px 30px', display:'flex', flexDirection:'column', justifyContent:'center', background:WHITE, color:G900 }}>
+              <span className="live-pulse" style={{ display:'inline-flex', alignItems:'center', gap:6, background:RED_PALE, border:`1px solid ${RED_PALE2}`, color:RED, fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, letterSpacing:'.04em', padding:'6px 12px', borderRadius:20, marginBottom:14, width:'fit-content' }}>
+                🔴 REGISTRATION OPEN
+              </span>
+              <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(24px,2.6vw,32px)', lineHeight:1.05, marginBottom:8, color:G900 }}>Boxing with Fash</div>
+              <div style={{ fontSize:14, color:G700, marginBottom:18, lineHeight:1.5 }}>WBC Female Asia Continental Champion Efasha "Fash The Face" Kamarudin</div>
+              <div style={{ display:'grid', gap:9, marginBottom:16 }}>
+                {[
+                  ['When', 'Sat, 15 Aug 2026 · 9:30–11:00AM'],
+                  ['Where','Spartans Boxing Club, Joo Chiat'],
+                  ['Price','$29 for 1 pax · $43.50 for 2 pax'],
+                ].map(([lbl, val]) => (
+                  <div key={lbl} style={{ fontSize:14, color:G900 }}>
+                    <span style={{ display:'inline-block', fontFamily:'Poppins,monospace', fontSize:12, textTransform:'uppercase', letterSpacing:'.06em', color:RED, width:64 }}>{lbl}</span>{val}
                   </div>
-                  <span className="bg-g100 text-g500 text-[11px] font-bold px-2.5 py-1 rounded-full">Verified</span>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </Wrap>
-      </Section>
-
-      {/* BRAND STORY TEASER */}
-      <section className="py-16 bg-g900">
-        <Wrap className="grid md:grid-cols-2 gap-14 items-center">
-          <div>
-            <span className="text-[13px] font-bold tracking-[.16em] uppercase text-white/50 mb-3 block">Our Story</span>
-            <h2 className="font-black text-[clamp(28px,3.6vw,44px)] text-white leading-[1.04] mb-5">
-              Born in Singapore.<br />Built for real people.
-            </h2>
-            <p className="text-white/70 text-base leading-relaxed mb-8">
-              Shortcutx started because we were tired of supplements that promised the world and delivered nothing. We decided to fix it — starting with transparency, real doses, and a nutritionist on call.
-            </p>
-            <Link to="/pages/our-story" className="inline-flex items-center justify-center bg-white text-g900 font-bold text-sm px-7 py-3 rounded-full hover:bg-g100 transition-all">
-              Meet the Team
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 col-span-2">
-              <p className="text-white/50 text-[12px] uppercase tracking-widest mb-2">Our Promise</p>
-              <p className="text-white font-bold text-lg leading-snug">
-                "If you don't see results in 30 days, we'll make it right — no questions asked."
-              </p>
-            </div>
-            <div className="bg-brand-red/20 border border-brand-red/30 rounded-2xl p-5">
-              <p className="font-black text-3xl text-white">2019</p>
-              <p className="text-white/60 text-[13px] mt-1">Founded in Singapore</p>
-            </div>
-            <div className="bg-brand-gold/10 border border-brand-gold/20 rounded-2xl p-5">
-              <p className="font-black text-3xl text-brand-gold">$2M+</p>
-              <p className="text-white/60 text-[13px] mt-1">In products sold</p>
+              <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:RED_DARK, marginBottom:20, fontWeight:600 }}>⚡ Limited slots priority by registration order</div>
+              <a href="https://shortcutx.co/pages/irl"
+                style={{ background:RED, color:WHITE, fontWeight:800, textAlign:'center', display:'block', padding:'16px 20px', borderRadius:6, border:`2px solid ${RED}`, textDecoration:'none', fontSize:14, transition:'.2s' }}>
+                Register for Boxing with Fash →
+              </a>
             </div>
           </div>
-        </Wrap>
+          {/* Sports lineup */}
+          <div style={{ marginTop:32, position:'relative', zIndex:1 }}>
+            <div style={{ fontFamily:'Poppins,monospace', fontSize:12, letterSpacing:'.08em', textTransform:'uppercase', color:'rgba(255,255,255,.5)', marginBottom:20 }}>The Roadmap More Ways to Move</div>
+            <div style={{ position:'relative', display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:12 }}>
+              <div style={{ position:'absolute', top:26, left:'8%', right:'8%', height:2, background:'rgba(255,255,255,.15)', zIndex:0 }} />
+              {[
+                { ic:'🥊', name:'Boxing',    status:'Live Now',    live:true },
+                { ic:'⚽', name:'Futsal',    status:'Next Up',     live:false },
+                { ic:'🧘🏻‍♀️',name:'Pilates',  status:'Coming Soon', live:false },
+                { ic:'🥋', name:'Muay Thai', status:'Coming Soon', live:false },
+                { ic:'🏃', name:'Running',   status:'Coming Soon', live:false },
+                { ic:'🧘', name:'Recovery',  status:'Coming Soon', live:false },
+              ].map(s => (
+                <div key={s.name}
+                  onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.borderColor='rgba(255,255,255,.3)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor=s.live?'rgba(255,107,102,.5)':'rgba(255,255,255,.12)' }}
+                  style={{ position:'relative', zIndex:1, background:s.live?'rgba(255,107,102,.12)':'rgba(255,255,255,.05)', border:`1px solid ${s.live?'rgba(255,107,102,.5)':'rgba(255,255,255,.12)'}`, borderRadius:10, padding:'16px 10px', textAlign:'center', transition:'transform .2s ease, border-color .2s ease', boxShadow:s.live?'0 0 0 3px rgba(255,107,102,.1)':'none' }}>
+                  <span style={{ fontSize:24, display:'block', marginBottom:8 }}>{s.ic}</span>
+                  <div style={{ fontWeight:700, fontSize:14, color:WHITE, marginBottom:5 }}>{s.name}</div>
+                  <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:s.live?'#ff8a86':'rgba(255,255,255,.45)', fontWeight:s.live?700:400 }}>{s.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* STICKY MOBILE CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-g200 p-4 flex gap-3">
-        <a href="#catalog" className="flex-1 text-center bg-brand-red text-white font-bold text-sm py-3 rounded-full">
-          Shop All Products
-        </a>
-        <Link to="/pages/find-your-fit" className="flex-1 text-center border-2 border-brand-red text-brand-red font-bold text-sm py-3 rounded-full">
+      {/* ===== COMMUNITY COLLAGE ===== */}
+      <section style={{ background:RED, padding:'88px 0 0', overflow:'hidden' }}>
+        <div style={WRAP}>
+          <div style={{ textAlign:'center', marginBottom:44 }}>
+            <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(26px,4.4vw,50px)', lineHeight:1.08, textTransform:'uppercase', letterSpacing:'-.01em' }}>
+              <span style={{ color:GOLD, display:'block' }}>150,000+ Boxes.</span>
+              <span style={{ color:WHITE, display:'block' }}>We've Been Getting Around.</span>
+            </h2>
+            <div style={{ display:'flex', justifyContent:'center', gap:10, marginTop:20 }}>
+              {[
+                { href:'https://www.instagram.com/shortcutx.co/', label:'IG' },
+                { href:'https://www.tiktok.com/@shortcutx.co',   label:'TT' },
+              ].map(s => (
+                <a key={s.label} href={s.href}
+                  onMouseEnter={e => { e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.background=G100; e.currentTarget.style.color=G900 }}
+                  onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.background='rgba(255,255,255,.12)'; e.currentTarget.style.color=WHITE }}
+                  style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,.12)', border:'1px solid rgba(255,255,255,.2)', color:WHITE, fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, padding:'8px 16px', borderRadius:20, textDecoration:'none', transition:'transform .2s ease, background .2s ease' }}>
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-end', padding:'0 20px 40px', marginTop:6 }}>
+          {[
+            { src:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500',                                alt:'Max Fat Burner Berry Punch', rot:'-9deg', mb:6,  z:1 },
+            { src:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=500',                                alt:'Blackcurrant',              rot:'-4deg', mb:34, z:2 },
+            { src:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500',                                   alt:'Max+ Fat Burner',           rot:'2deg',  mb:54, z:3 },
+            { src:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500',                alt:'Night Hot Chocolate',        rot:'-3deg', mb:26, z:2 },
+            { src:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500',                                alt:'Detox Juice',               rot:'8deg',  mb:0,  z:1 },
+          ].map((img, i) => (
+            <img key={i} src={img.src} alt={img.alt}
+              onMouseEnter={e => e.currentTarget.style.transform='translateY(-16px) rotate(0deg) scale(1.04)'}
+              onMouseLeave={e => e.currentTarget.style.transform=`rotate(${img.rot})`}
+              style={{ width:220, height:270, objectFit:'cover', borderRadius:14, boxShadow:'0 22px 40px rgba(0,0,0,.18)', border:`6px solid ${WHITE}`, margin:'0 -22px', transition:'transform .3s ease', position:'relative', cursor:'default', transform:`rotate(${img.rot})`, zIndex:img.z, marginBottom:img.mb }} />
+          ))}
+        </div>
+      </section>
+
+      {/* ===== STICKY MOBILE CTA ===== */}
+      <div className="md:hidden" style={{ position:'fixed', bottom:0, left:0, right:0, zIndex:100, background:WHITE, borderTop:`1px solid ${G200}`, display:'flex', gap:10, padding:'12px 16px', boxShadow:'0 -4px 20px rgba(0,0,0,.08)' }}>
+        <button onClick={() => toCatalog('all')}
+          style={{ flex:1, fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', background:'transparent', color:G900, border:`2px solid ${G900}`, transition:'.2s' }}>
+          Shop Now
+        </button>
+        <Link to="/pages/find-your-fit"
+          style={{ flex:1, fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', background:RED, color:WHITE, border:`2px solid ${RED}`, transition:'.2s', textDecoration:'none' }}>
           Find Your Fit
         </Link>
       </div>

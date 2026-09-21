@@ -36,3 +36,39 @@
   a { color: inherit; text-decoration: none; }
   img { max-width: 100%; display: block; }
 }
+
+/* Marquee scroll animation */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-block;
+  animation: marquee-scroll 26s linear infinite;
+}
+.marquee-track--announce {
+  display: inline-block;
+  animation: marquee-scroll 40s linear infinite;
+}
+
+/* Counter bar animation */
+.stat-bar {
+  height: 5px;
+  background: linear-gradient(90deg, #9b0d0c, #ff6b66);
+  width: 0%;
+  border-radius: 4px;
+  transition: width 1.6s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Float badge animations */
+@keyframes bob1 { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+@keyframes bob2 { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(10px); } }
+@keyframes pulse { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.4; transform:scale(1.5); } }
+@keyframes floaty { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-14px); } }
+@keyframes livePulse { 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+
+.float-badge-b1 { animation: bob1 3.6s ease-in-out infinite; }
+.float-badge-b2 { animation: bob2 4.2s ease-in-out infinite; }
+.pulse-dot     { animation: pulse 1.6s ease-in-out infinite; }
+.product-shot-float { animation: floaty 5s ease-in-out infinite; }
+.live-pulse    { animation: livePulse 2s ease-in-out infinite; }
