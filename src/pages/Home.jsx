@@ -47,6 +47,39 @@ const goalCards = [
   { tab:'bundle', title:'Bundles',          desc:'Stack your goals, save on every pack',                                          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
 ]
 
+const promoBanners = [
+  {
+    tag: 'BEST SELLER', tagColor: '#9b0d0c',
+    headline: "Singapore's #1\nFat Burner Juice",
+    sub: 'Clinically studied ingredients. Science-backed. Results you can feel in as little as 2 weeks.',
+    bullets: ['Boosts metabolism up to 24% over 8 weeks', 'Reduces fat absorption by up to 39%', 'Clinically studied KSM-66® & Morosil®'],
+    cta: 'Shop Max+ Fat Burner', ctaHref: '/products/max-plus',
+    badge: 'BEST\nSELLER', badgeColor: '#9b0d0c',
+    img: 'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=700',
+    bg: '#fafafa',
+  },
+  {
+    tag: 'NEW LAUNCH', tagColor: '#1a7a5e',
+    headline: 'Better sleep.\nBetter burns.',
+    sub: 'Your night-time ritual for deeper rest and effortless weight management while you sleep.',
+    bullets: ['Burns fat while you sleep', 'KSM-66® Ashwagandha for cortisol control', 'Rich night hot chocolate — zero guilt'],
+    cta: 'Shop Night Hot Chocolate', ctaHref: '/products/night-hot-chocolate',
+    badge: 'NEW\nLAUNCH', badgeColor: '#1a7a5e',
+    img: 'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=700',
+    bg: '#f0f5f2',
+  },
+  {
+    tag: 'GREAT VALUE', tagColor: '#7a5a1a',
+    headline: 'Stack your goals.\nSave more.',
+    sub: 'Bundle your day & night routine and unlock up to 20% off. More results, less spend.',
+    bullets: ['Day + Night fat burning system', 'Save up to 20% vs. buying separate', 'Free shipping on every bundle'],
+    cta: 'Shop Bundles', ctaHref: '/collections/bundles',
+    badge: 'SAVE\n20%', badgeColor: '#7a5a1a',
+    img: 'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=700',
+    bg: '#fdf8f0',
+  },
+]
+
 const ambassadors = [
   { name:'Efasha "Fash The Face" Kamarudin', role:'WBC Female Asia Continental Champion',         tag:'BRAND PARTNER',   emoji:'🥊', grad:'linear-gradient(150deg,#2b2523,#333333)' },
   { name:'Nadhra',                            role:'Content Creator & Brand Ambassador',            tag:'BRAND PARTNER',   emoji:'🎤', grad:'linear-gradient(150deg,#c9a227,#8a6a2f)' },
@@ -101,7 +134,13 @@ const BTN_GHOST   = { fontWeight:700, fontSize:14, padding:'14px 26px', borderRa
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('all')
+  const [promoIdx, setPromoIdx] = useState(0)
   const { ref: statsRef, counts, barsOn } = useStatsAnimation()
+
+  useEffect(() => {
+    const t = setInterval(() => setPromoIdx(i => (i + 1) % promoBanners.length), 5000)
+    return () => clearInterval(t)
+  }, [])
 
   const visible = activeTab === 'all' ? products : products.filter(p => p.cat === activeTab)
 
@@ -190,6 +229,70 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      {/* ===== PROMO BANNER CAROUSEL ===== */}
+      <section style={{ position:'relative', overflow:'hidden', transition:'background .5s ease', background: promoBanners[promoIdx].bg }}>
+        {promoBanners.map((b, i) => (
+          <div key={i} style={{
+            position: i === 0 ? 'relative' : 'absolute',
+            inset: 0,
+            opacity: promoIdx === i ? 1 : 0,
+            transition: 'opacity .6s ease',
+            pointerEvents: promoIdx === i ? 'auto' : 'none',
+            background: b.bg,
+          }}>
+            <div style={{ ...WRAP, padding:'52px 28px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, alignItems:'center', minHeight:340 }}>
+              {/* Text */}
+              <div>
+                <span style={{ display:'inline-block', background: b.tagColor, color:WHITE, fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', padding:'4px 12px', borderRadius:4, marginBottom:18 }}>
+                  {b.tag}
+                </span>
+                <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(28px,3.2vw,44px)', lineHeight:1.05, letterSpacing:'-.015em', color:G900, marginBottom:14, whiteSpace:'pre-line' }}>
+                  {b.headline}
+                </h2>
+                <p style={{ fontSize:15, color:G700, lineHeight:1.6, marginBottom:20, maxWidth:420 }}>{b.sub}</p>
+                <ul style={{ listStyle:'none', padding:0, margin:'0 0 28px', display:'flex', flexDirection:'column', gap:9 }}>
+                  {b.bullets.map(pt => (
+                    <li key={pt} style={{ display:'flex', alignItems:'flex-start', gap:10, fontSize:14, color:G700 }}>
+                      <span style={{ width:18, height:18, minWidth:18, borderRadius:'50%', background: b.tagColor, display:'flex', alignItems:'center', justifyContent:'center', marginTop:1 }}>
+                        <span style={{ color:WHITE, fontSize:10, fontWeight:700 }}>✓</span>
+                      </span>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+                <Link to={b.ctaHref} style={{ ...BTN_PRIMARY, background: b.tagColor, borderColor: b.tagColor }}>
+                  {b.cta} →
+                </Link>
+              </div>
+              {/* Image + badge */}
+              <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <img src={b.img} alt={b.headline}
+                  style={{ width:'100%', maxWidth:380, aspectRatio:'1/1', objectFit:'contain', display:'block', filter:'drop-shadow(0 20px 40px rgba(0,0,0,.15))' }} />
+                <div style={{
+                  position:'absolute', top:16, right:16,
+                  width:74, height:74, borderRadius:'50%',
+                  background: b.badgeColor, color:WHITE,
+                  display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                  fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:13, textAlign:'center', lineHeight:1.2,
+                  whiteSpace:'pre-line', boxShadow:'0 8px 20px rgba(0,0,0,.25)',
+                }}>
+                  {b.badge}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Dot nav */}
+        <div style={{ position:'absolute', bottom:18, left:'50%', transform:'translateX(-50%)', display:'flex', gap:8, zIndex:10 }}>
+          {promoBanners.map((_, i) => (
+            <button key={i} onClick={() => setPromoIdx(i)}
+              style={{ width: promoIdx === i ? 24 : 8, height:8, borderRadius:4, border:'none', cursor:'pointer', transition:'all .3s ease',
+                background: promoIdx === i ? G900 : G300, padding:0 }} />
+          ))}
+        </div>
+      </section>
 
       {/* ===== TRUST ROW ===== */}
       <section style={{ padding:'38px 0', borderBottom:`1px solid ${G200}` }}>
