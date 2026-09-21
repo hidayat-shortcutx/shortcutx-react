@@ -13,7 +13,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Nav />
-      <main className="pt-[88px]">
+      <main className="pt-[104px]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products/max-plus" element={<ProductMaxPlus />} />
