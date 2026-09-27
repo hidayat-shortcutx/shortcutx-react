@@ -810,17 +810,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== STICKY MOBILE CTA ===== */}
-      <div className="md:hidden" style={{ position:'fixed', bottom:0, left:0, right:0, zIndex:100, background:WHITE, borderTop:`1px solid ${G200}`, display:'flex', gap:10, padding:'12px 16px', boxShadow:'0 -4px 20px rgba(0,0,0,.08)' }}>
-        <button onClick={() => toCatalog('all')}
-          style={{ flex:1, fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', background:'transparent', color:G900, border:`2px solid ${G900}`, transition:'.2s' }}>
-          Shop Now
-        </button>
-        <Link to="/pages/find-your-fit"
-          style={{ flex:1, fontWeight:700, fontSize:14, padding:'14px 26px', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', background:RED, color:WHITE, border:`2px solid ${RED}`, transition:'.2s', textDecoration:'none' }}>
-          Find Your Fit
-        </Link>
-      </div>
     </>
   )
 }
