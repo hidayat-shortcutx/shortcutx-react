@@ -30,21 +30,21 @@ const products = [
   { name:'Night Fat Burner Juice',              price:'$22.00 – $88.00',       perDay:'3.14', confirmed:false, cat:'well',   img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-13.jpg?v=1779346704&width=600' },
   { name:'Starter Fat Burner Bundle',           price:'Save up to 15%',        perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600' },
   { name:'Build A Box: Reset Stack',            price:'$108.00 (illustrative)', perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=600' },
-  { name:'Advanced Fat Burner Bundle',          price:'Save up to 20%',        perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=600' },
+  { name:'Advanced Fat Burner Bundle',          price:'Save up to 10%',        perDay:null,   confirmed:false, cat:'bundle', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=600' },
 ]
 
 const catChips = [
   { tab:'burn',   label:'Burn Fat',         count:'6 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200' },
   { tab:'slim',   label:'Slimming Drinks',  count:'4 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200' },
   { tab:'well',   label:'Wellness & Sleep', count:'2 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200' },
-  { tab:'bundle', label:'Bundles',          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200' },
+  { tab:'bundle', label:'Bundles',          count:'Save up to 10%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200' },
 ]
 
 const goalCards = [
   { tab:'burn',   title:'Burn Fat',         desc:'Max+ Fat Burner Juice, Berry Punch, Blackcurrant, Apple Cider, Lychee Lemon', count:'6 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=500' },
   { tab:'slim',   title:'Slimming Drinks',  desc:'Detox Juice, De-Bloat White Grape, Flat Tummy Shakes',                        count:'4 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=500' },
   { tab:'well',   title:'Wellness & Sleep', desc:'Night Hot Chocolate, Night Fat Burner Juice',                                  count:'2 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=500' },
-  { tab:'bundle', title:'Bundles',          desc:'Stack your goals, save on every pack',                                          count:'Save up to 20%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
+  { tab:'bundle', title:'Bundles',          desc:'Stack your goals, save on every pack',                                          count:'Save up to 10%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=500' },
 ]
 
 const heroSlides = [
@@ -481,12 +481,12 @@ export default function Home() {
               <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:22, marginBottom:10, color:G900 }}>Goal Stack Bundle</h3>
               <p style={{ fontSize:14, color:G700, marginBottom:16, lineHeight:1.5 }}>Combine a Fat Burner + Slimming Drink + Wellness formula into one daily stack.</p>
               <ul style={{ marginBottom:20, padding:0 }}>
-                {['Up to 20% off vs. buying separately','One checkout, one delivery','Best for full lifestyle resets'].map(li => (
+                {['Up to 10% off vs. buying separately','One checkout, one delivery','Best for full lifestyle resets'].map(li => (
                   <li key={li} style={{ listStyle:'none', fontSize:14, padding:'6px 0', borderBottom:`1px solid ${G200}`, display:'flex', gap:8 }}><span style={{ color:RED, fontWeight:800 }}>✓</span>{li}</li>
                 ))}
               </ul>
               <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:16 }}>
-                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:26, color:G900 }}>Save 20%</span>
+                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:26, color:G900 }}>Save 10%</span>
                 <span style={{ fontSize:14, textDecoration:'line-through', color:G500 }}>on bundles</span>
               </div>
               <a href="#catalog" onClick={e=>{e.preventDefault();toCatalog('bundle')}}
