@@ -136,12 +136,22 @@ const BTN_GHOST   = { fontWeight:700, fontSize:14, padding:'14px 26px', borderRa
 export default function Home() {
   const [activeTab, setActiveTab] = useState('all')
   const [heroIdx, setHeroIdx] = useState(0)
+  const [shopActive, setShopActive] = useState(2)
+  const shopRef = useRef(null)
   const { ref: statsRef, counts, barsOn } = useStatsAnimation()
 
   useEffect(() => {
     const t = setInterval(() => setHeroIdx(i => (i + 1) % heroSlides.length), 5500)
     return () => clearInterval(t)
   }, [])
+
+  useEffect(() => {
+    const el = shopRef.current
+    if (!el) return
+    const CARD_W = 196, GAP = 12
+    const target = shopActive * (CARD_W + GAP) - (el.clientWidth / 2 - CARD_W / 2)
+    el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' })
+  }, [shopActive])
 
   const visible = activeTab === 'all' ? products : products.filter(p => p.cat === activeTab)
 
@@ -772,51 +782,82 @@ export default function Home() {
       </section>
 
       {/* ===== SHOPPABLE VIDEOS ===== */}
-      <section style={{ background:WHITE, padding:'80px 0 90px' }}>
+      <section style={{ background:WHITE, padding:'80px 0 72px', overflow:'hidden' }}>
         <div style={WRAP}>
-          <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:48, flexWrap:'wrap', gap:16 }}>
-            <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(28px,3.5vw,46px)', lineHeight:1.1, color:G900, margin:0 }}>
-              Shop with <em style={{ fontStyle:'italic', color:RED }}>real results.</em>
-            </h2>
-            <div style={{ display:'flex', gap:10 }}>
+          <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(28px,3.5vw,46px)', lineHeight:1.1, color:G900, margin:'0 0 48px', textAlign:'center' }}>
+            Shop with <em style={{ fontStyle:'italic', color:RED }}>real results.</em>
+          </h2>
+        </div>
+
+        {/* Carousel */}
+        <div style={{ position:'relative' }}>
+          {/* Prev arrow */}
+          <button onClick={() => setShopActive(a => Math.max(0, a - 1))}
+            style={{ position:'absolute', left:'clamp(8px,2vw,40px)', top:'50%', transform:'translateY(-50%)', zIndex:10, width:44, height:44, borderRadius:'50%', background:WHITE, border:`1.5px solid ${G300}`, boxShadow:'0 4px 14px rgba(0,0,0,.1)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, color:G700, transition:'background .2s, border-color .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.background=G900; e.currentTarget.style.color=WHITE; e.currentTarget.style.borderColor=G900 }}
+            onMouseLeave={e => { e.currentTarget.style.background=WHITE; e.currentTarget.style.color=G700; e.currentTarget.style.borderColor=G300 }}>
+            ‹
+          </button>
+          {/* Next arrow */}
+          <button onClick={() => setShopActive(a => Math.min(7, a + 1))}
+            style={{ position:'absolute', right:'clamp(8px,2vw,40px)', top:'50%', transform:'translateY(-50%)', zIndex:10, width:44, height:44, borderRadius:'50%', background:WHITE, border:`1.5px solid ${G300}`, boxShadow:'0 4px 14px rgba(0,0,0,.1)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, color:G700, transition:'background .2s, border-color .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.background=G900; e.currentTarget.style.color=WHITE; e.currentTarget.style.borderColor=G900 }}
+            onMouseLeave={e => { e.currentTarget.style.background=WHITE; e.currentTarget.style.color=G700; e.currentTarget.style.borderColor=G300 }}>
+            ›
+          </button>
+
+          {/* Track wrapper — hides scrollbar */}
+          <div style={{ overflow:'hidden' }}>
+            <div ref={shopRef} style={{ display:'flex', gap:12, padding:'28px 120px 48px', marginBottom:'-20px', paddingBottom:'48px', overflowX:'scroll', scrollbarWidth:'none', msOverflowStyle:'none' }}>
               {[
-                { href:'https://www.instagram.com/shortcutx.co/', label:'Instagram' },
-                { href:'https://www.tiktok.com/@shortcutx.co',    label:'TikTok' },
-              ].map(s => (
-                <a key={s.label} href={s.href}
-                  onMouseEnter={e => e.currentTarget.style.opacity='.72'}
-                  onMouseLeave={e => e.currentTarget.style.opacity='1'}
-                  style={{ display:'inline-flex', alignItems:'center', background:G900, color:WHITE, fontFamily:'Poppins,sans-serif', fontSize:12, fontWeight:700, padding:'9px 20px', borderRadius:20, textDecoration:'none', letterSpacing:'.04em', transition:'opacity .2s' }}>
-                  {s.label}
-                </a>
-              ))}
+                { thumb:'https://shortcutx.co/cdn/shop/files/max_studio.webp?v=1778207170&width=600',                                                 chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',      price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice'          },
+                { thumb:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=600',                                      chipImg:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200',                                      name:'Max Berry Punch',      price:'From $27.50', href:'https://shortcutx.co/products/max-fat-burner-berry-punch'  },
+                { thumb:'https://shortcutx.co/cdn/shop/files/SSECONDARY_image_Max_-07.webp?v=1778207184&width=600',                                   chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',      price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice'          },
+                { thumb:'https://shortcutx.co/cdn/shop/files/4_6c92ed2f-6b45-4979-a5ea-13b56cf440ac.webp?v=1778207212&width=700',                     chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',      price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice'          },
+                { thumb:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=600',                      chipImg:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200',                      name:'Night Hot Chocolate',  price:'$45.00',      href:'https://shortcutx.co/products/night-hot-chocolate'            },
+                { thumb:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=600',                                      chipImg:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-04.jpg?v=1779346704&width=200',                                      name:'Max Blackcurrant',     price:'From $27.50', href:'https://shortcutx.co/products/max-fat-burner-juice'          },
+                { thumb:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=600',                                      chipImg:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200',                                      name:'Detox Juice',          price:'From $22.00', href:'https://shortcutx.co/products/detox-juice'                   },
+                { thumb:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=600',                                         chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',      price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice'          },
+              ].map((v, i) => {
+                const isAct = i === shopActive
+                return (
+                  <a key={i} href={v.href} onClick={e => { e.preventDefault(); setShopActive(i) }}
+                    style={{ flex:'0 0 196px', aspectRatio:'3/4', borderRadius:18, overflow:'hidden', position:'relative', display:'block', textDecoration:'none', border:`3px solid ${WHITE}`, boxShadow:isAct?'0 24px 48px rgba(0,0,0,.18)':'0 4px 14px rgba(0,0,0,.07)', transform:isAct?'translateY(-16px) scale(1.07)':'translateY(0) scale(1)', filter:isAct?'none':'grayscale(.85)', transition:'transform .4s ease, box-shadow .4s ease, filter .4s ease', cursor:'pointer' }}>
+                    <img src={v.thumb} alt={v.name} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
+                    <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.7) 100%)' }} />
+                    <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,.18)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', opacity:isAct?1:.5, transition:'opacity .4s' }}>
+                      <div style={{ width:0, height:0, borderTop:'8px solid transparent', borderBottom:'8px solid transparent', borderLeft:`14px solid ${WHITE}`, marginLeft:3 }} />
+                    </div>
+                    <div style={{ position:'absolute', bottom:10, left:8, right:8, background:'rgba(255,255,255,.93)', backdropFilter:'blur(10px)', borderRadius:10, padding:'7px 8px', display:'flex', alignItems:'center', gap:8 }}>
+                      <img src={v.chipImg} alt="" style={{ width:34, height:34, borderRadius:6, objectFit:'cover', flexShrink:0 }} />
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:11, color:G900, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.name}</div>
+                        <div style={{ fontSize:11, color:G700, marginTop:1 }}>{v.price}</div>
+                      </div>
+                      <div style={{ width:24, height:24, borderRadius:5, background:isAct?RED:G200, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, color:isAct?WHITE:G700, transition:'background .4s, color .4s' }}>↗</div>
+                    </div>
+                  </a>
+                )
+              })}
             </div>
           </div>
-          <div style={{ display:'flex', gap:12, alignItems:'flex-end', justifyContent:'center', overflowX:'auto', paddingBottom:4 }}>
-            {[
-              { thumb:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=600',                                        chipImg:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200',                                        name:'Max Berry Punch',   price:'From $27.50', href:'https://shortcutx.co/products/max-fat-burner-berry-punch', center:false },
-              { thumb:'https://shortcutx.co/cdn/shop/files/SSECONDARY_image_Max_-07.webp?v=1778207184&width=600',                                     chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',   price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice',        center:false },
-              { thumb:'https://shortcutx.co/cdn/shop/files/4_6c92ed2f-6b45-4979-a5ea-13b56cf440ac.webp?v=1778207212&width=700',                       chipImg:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200',                                           name:'Max+ Fat Burner',   price:'From $63.00', href:'https://shortcutx.co/products/max-fat-burner-juice',        center:true  },
-              { thumb:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=600',                        chipImg:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200',                        name:'Night Hot Choc',    price:'$45.00',      href:'https://shortcutx.co/products/night-hot-chocolate',          center:false },
-              { thumb:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=600',                                        chipImg:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200',                                        name:'Detox Juice',       price:'From $22.00', href:'https://shortcutx.co/products/detox-juice',                  center:false },
-            ].map((v, i) => (
-              <a key={i} href={v.href}
-                onMouseEnter={e => { e.currentTarget.style.transform=v.center?'translateY(-28px) scale(1.03)':'translateY(-10px) scale(1.02)'; e.currentTarget.style.boxShadow='0 32px 64px rgba(0,0,0,.22)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform=v.center?'translateY(-24px)':'translateY(0)'; e.currentTarget.style.boxShadow=v.center?'0 24px 48px rgba(0,0,0,.16)':'0 8px 24px rgba(0,0,0,.1)' }}
-                style={{ flex:v.center?'0 0 218px':'0 0 182px', aspectRatio:'3/4', borderRadius:18, overflow:'hidden', position:'relative', display:'block', textDecoration:'none', border:`3px solid ${WHITE}`, boxShadow:v.center?'0 24px 48px rgba(0,0,0,.16)':'0 8px 24px rgba(0,0,0,.1)', transform:v.center?'translateY(-24px)':'translateY(0)', transition:'transform .3s ease, box-shadow .3s ease' }}>
-                <img src={v.thumb} alt={v.name} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
-                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.68) 100%)' }} />
-                <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,.2)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <div style={{ width:0, height:0, borderTop:'8px solid transparent', borderBottom:'8px solid transparent', borderLeft:`14px solid ${WHITE}`, marginLeft:3 }} />
-                </div>
-                <div style={{ position:'absolute', bottom:10, left:8, right:8, background:'rgba(255,255,255,.93)', backdropFilter:'blur(10px)', borderRadius:10, padding:'7px 8px', display:'flex', alignItems:'center', gap:8 }}>
-                  <img src={v.chipImg} alt="" style={{ width:34, height:34, borderRadius:6, objectFit:'cover', flexShrink:0 }} />
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:11, color:G900, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.name}</div>
-                    <div style={{ fontSize:11, color:G700, marginTop:1 }}>{v.price}</div>
-                  </div>
-                  <div style={{ width:24, height:24, borderRadius:5, background:G200, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, color:G700 }}>↗</div>
-                </div>
+        </div>
+
+        {/* Dots + social */}
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20, marginTop:4 }}>
+          <div style={{ display:'flex', gap:7 }}>
+            {Array.from({ length:8 }, (_, i) => (
+              <button key={i} onClick={() => setShopActive(i)}
+                style={{ width:i===shopActive?22:7, height:7, borderRadius:4, background:i===shopActive?RED:G300, border:'none', cursor:'pointer', padding:0, transition:'width .3s ease, background .3s ease' }} />
+            ))}
+          </div>
+          <div style={{ display:'flex', gap:10 }}>
+            {[{ href:'https://www.instagram.com/shortcutx.co/', label:'Instagram' }, { href:'https://www.tiktok.com/@shortcutx.co', label:'TikTok' }].map(s => (
+              <a key={s.label} href={s.href}
+                onMouseEnter={e => e.currentTarget.style.opacity='.72'}
+                onMouseLeave={e => e.currentTarget.style.opacity='1'}
+                style={{ display:'inline-flex', alignItems:'center', background:G900, color:WHITE, fontFamily:'Poppins,sans-serif', fontSize:12, fontWeight:700, padding:'9px 20px', borderRadius:20, textDecoration:'none', letterSpacing:'.04em', transition:'opacity .2s' }}>
+                {s.label}
               </a>
             ))}
           </div>
