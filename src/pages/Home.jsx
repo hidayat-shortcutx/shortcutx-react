@@ -75,6 +75,12 @@ const heroSlides = [
   },
 ]
 
+const testimonials = [
+  { name:'Wahidah I.',     initials:'WI', product:'Gas Relief', quote:"I've tried so many supplements but Shortcutx Max+ actually works. Lost 4kg in 6 weeks and I didn't have to starve myself. The taste is great too." },
+  { name:'Noredahwati K.', initials:'NK', product:'Detox',      quote:"The Detox Juice is now a non-negotiable in my mornings. I feel lighter, less bloated, and my energy is up. My whole family has noticed the difference." },
+  { name:'Melissa B.S.',   initials:'MB', product:'Immunity',   quote:"Immunity Plus has been a game changer. I used to fall sick every month — since starting, I've been consistent and my body just feels stronger." },
+]
+
 const ambassadors = [
   { name:'Efasha "Fash The Face" Kamarudin', role:'WBC Female Asia Continental Champion',         tag:'BRAND PARTNER',   emoji:'🥊', grad:'linear-gradient(150deg,#2b2523,#333333)' },
   { name:'Nadhra',                            role:'Content Creator & Brand Ambassador',            tag:'BRAND PARTNER',   emoji:'🎤', grad:'linear-gradient(150deg,#c9a227,#8a6a2f)' },
@@ -650,75 +656,118 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SHORTCUTX IRL ===== */}
-      <section style={{ position:'relative', overflow:'hidden', padding:'64px 0', background:`linear-gradient(155deg,${G900} 55%,${RED_DARK} 140%)`, color:WHITE }}>
-        <div style={{ position:'absolute', width:420, height:420, borderRadius:'50%', background:RED_LIGHT, top:-180, right:-140, opacity:.14, pointerEvents:'none' }} />
+      {/* ===== TESTIMONIALS ===== */}
+      <section style={{ background:'#f7f4ef', padding:'70px 0' }}>
         <div style={WRAP}>
-          <div style={{ marginBottom:28 }}>
-            <img src="https://shortcutx.co/cdn/shop/files/irl_logo.png?v=1783492137&width=300" alt="Shortcutx IRL"
-              style={{ height:32, width:'auto', marginBottom:16, filter:'brightness(0) invert(1)' }}
-              onError={e => e.target.style.display='none'} />
-            <span style={{ ...EYEBROW, color:'#ff6b66' }}>09 Shortcutx IRL</span>
-            <h2 style={{ ...H2, color:WHITE }}>Momentum,<br />multiplied.</h2>
-            <p style={{ color:'rgba(255,255,255,.7)', fontSize:14, lineHeight:1.6, maxWidth:560 }}>From the screen to the streets this is Shortcutx, in real life. Train alongside real athletes, not just influencers on a screen.</p>
-          </div>
-          {/* Event card */}
-          <div
-            onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 24px 48px rgba(0,0,0,.3)'; e.currentTarget.style.borderColor='rgba(255,255,255,.3)' }}
-            onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor='rgba(255,255,255,.15)' }}
-            style={{ display:'grid', gridTemplateColumns:'380px 1fr', background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.15)', borderRadius:14, overflow:'hidden', position:'relative', zIndex:1, transition:'transform .25s ease, box-shadow .25s ease, border-color .25s ease' }}>
-            <div style={{ position:'relative', background:`linear-gradient(150deg,${RED},${RED_DARK})`, display:'flex', alignItems:'center', justifyContent:'center', minHeight:280, fontSize:64 }}>
-              🥊
-              <span style={{ position:'absolute', top:14, left:14, background:'rgba(255,255,255,.15)', backdropFilter:'blur(4px)', fontFamily:'Poppins,monospace', fontSize:12, fontWeight:600, letterSpacing:'.06em', padding:'6px 12px', borderRadius:20, color:WHITE }}>BOXING</span>
+          <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:44, flexWrap:'wrap', gap:16 }}>
+            <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(28px,3.5vw,44px)', lineHeight:1.1, color:G900, margin:0 }}>
+              In their <em style={{ fontStyle:'italic', color:'#8c5e2a' }}>own words.</em>
+            </h2>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <span style={{ fontSize:14, color:G500, letterSpacing:'.04em' }}>1 — {testimonials.length}</span>
+              <button style={{ width:40, height:40, borderRadius:'50%', border:`1.5px solid ${G300}`, background:WHITE, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:G700, transition:'border-color .2s' }}
+                onMouseEnter={e => e.currentTarget.style.borderColor=G700}
+                onMouseLeave={e => e.currentTarget.style.borderColor=G300}>←</button>
+              <button style={{ width:40, height:40, borderRadius:'50%', border:`1.5px solid ${G300}`, background:WHITE, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, color:G700, transition:'border-color .2s' }}
+                onMouseEnter={e => e.currentTarget.style.borderColor=G700}
+                onMouseLeave={e => e.currentTarget.style.borderColor=G300}>→</button>
             </div>
-            <div style={{ padding:'28px 30px', display:'flex', flexDirection:'column', justifyContent:'center', background:WHITE, color:G900 }}>
-              <span className="live-pulse" style={{ display:'inline-flex', alignItems:'center', gap:6, background:RED_PALE, border:`1px solid ${RED_PALE2}`, color:RED, fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, letterSpacing:'.04em', padding:'6px 12px', borderRadius:20, marginBottom:14, width:'fit-content' }}>
-                🔴 REGISTRATION OPEN
-              </span>
-              <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(24px,2.6vw,32px)', lineHeight:1.05, marginBottom:8, color:G900 }}>Boxing with Fash</div>
-              <div style={{ fontSize:14, color:G700, marginBottom:18, lineHeight:1.5 }}>WBC Female Asia Continental Champion Efasha "Fash The Face" Kamarudin</div>
-              <div style={{ display:'grid', gap:9, marginBottom:16 }}>
-                {[
-                  ['When', 'Sat, 15 Aug 2026 · 9:30–11:00AM'],
-                  ['Where','Spartans Boxing Club, Joo Chiat'],
-                  ['Price','$29 for 1 pax · $43.50 for 2 pax'],
-                ].map(([lbl, val]) => (
-                  <div key={lbl} style={{ fontSize:14, color:G900 }}>
-                    <span style={{ display:'inline-block', fontFamily:'Poppins,monospace', fontSize:12, textTransform:'uppercase', letterSpacing:'.06em', color:RED, width:64 }}>{lbl}</span>{val}
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:22 }}>
+            {testimonials.map((t, i) => (
+              <div key={i} style={{ background:WHITE, border:'1px solid #e8e2da', borderRadius:14, padding:'28px 26px', display:'flex', flexDirection:'column', gap:18 }}>
+                <div style={{ color:'#c17f3a', fontSize:18, letterSpacing:2 }}>★★★★★</div>
+                <p style={{ fontSize:15, color:G700, lineHeight:1.7, margin:0, flex:1 }}>"{t.quote}"</p>
+                <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                  <div style={{ width:44, height:44, borderRadius:'50%', background:'#e8e2da', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:13, color:G700, flexShrink:0 }}>
+                    {t.initials}
                   </div>
-                ))}
+                  <div>
+                    <div style={{ fontWeight:700, fontSize:14, color:G900 }}>{t.name}</div>
+                    <div style={{ fontSize:12, color:G500, marginTop:2 }}>Verified Purchase · {t.product}</div>
+                  </div>
+                </div>
               </div>
-              <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:RED_DARK, marginBottom:20, fontWeight:600 }}>⚡ Limited slots priority by registration order</div>
-              <a href="https://shortcutx.co/pages/irl"
-                style={{ background:RED, color:WHITE, fontWeight:800, textAlign:'center', display:'block', padding:'16px 20px', borderRadius:6, border:`2px solid ${RED}`, textDecoration:'none', fontSize:14, transition:'.2s' }}>
-                Register for Boxing with Fash →
-              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SHORTCUTX IRL ===== */}
+      <section style={{ background:'#0d0d0d', overflow:'hidden' }}>
+        {/* Split: left image panel | right event card */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
+          {/* Left panel */}
+          <div style={{ position:'relative', background:'#111', overflow:'hidden', minHeight:460 }}>
+            <img
+              src="https://shortcutx.co/cdn/shop/files/efasha_irl.jpg"
+              alt=""
+              style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:.65 }}
+              onError={e => e.target.style.display='none'}
+            />
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(0,0,0,.75) 0%, rgba(0,0,0,.25) 100%)' }} />
+            <div style={{ position:'relative', zIndex:1, padding:'48px 44px', height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between', boxSizing:'border-box' }}>
+              <div>
+                <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(24px,2.8vw,38px)', textTransform:'uppercase', lineHeight:1.05, color:WHITE, marginBottom:18 }}>
+                  DON'T JUST WATCH.<br /><span style={{ color:RED }}>STEP INTO IT.</span>
+                </div>
+                <p style={{ fontSize:14, color:'rgba(255,255,255,.7)', lineHeight:1.65, maxWidth:320, marginBottom:26 }}>
+                  Train alongside athletes and a community that moves with purpose.
+                </p>
+                <a href="https://shortcutx.co/pages/irl"
+                  style={{ display:'inline-flex', alignItems:'center', gap:8, background:RED, color:WHITE, fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:14, padding:'13px 22px', borderRadius:6, textDecoration:'none' }}>
+                  EXPLORE IRL →
+                </a>
+              </div>
+              <div style={{ marginTop:32 }}>
+                <div style={{ fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.35)', marginBottom:6 }}>FIRST UP:</div>
+                <div style={{ fontSize:14, color:'rgba(255,255,255,.7)', fontWeight:600, lineHeight:1.4 }}>Boxing with Efasha "Fash The Face" Kamarudin</div>
+              </div>
             </div>
           </div>
-          {/* Sports lineup */}
-          <div style={{ marginTop:32, position:'relative', zIndex:1 }}>
-            <div style={{ fontFamily:'Poppins,monospace', fontSize:12, letterSpacing:'.08em', textTransform:'uppercase', color:'rgba(255,255,255,.5)', marginBottom:20 }}>The Roadmap More Ways to Move</div>
-            <div style={{ position:'relative', display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:12 }}>
-              <div style={{ position:'absolute', top:26, left:'8%', right:'8%', height:2, background:'rgba(255,255,255,.15)', zIndex:0 }} />
+          {/* Right panel: event card */}
+          <div style={{ background:WHITE, padding:'44px 44px', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+            <span style={{ display:'inline-flex', alignItems:'center', gap:6, background:RED_PALE, border:`1px solid ${RED_PALE2}`, color:RED, fontFamily:'Poppins,monospace', fontSize:12, fontWeight:700, letterSpacing:'.04em', padding:'6px 12px', borderRadius:20, marginBottom:16, width:'fit-content' }}>
+              🔴 REGISTRATION OPEN
+            </span>
+            <h3 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(22px,2.4vw,32px)', lineHeight:1.05, marginBottom:8, color:G900 }}>Boxing with Fash</h3>
+            <p style={{ fontSize:14, color:G700, marginBottom:22, lineHeight:1.5 }}>WBC Female Asia Continental Champion Efasha "Fash The Face" Kamarudin</p>
+            <div style={{ display:'grid', gap:11, marginBottom:18 }}>
               {[
-                { ic:'🥊', name:'Boxing',    status:'Live Now',    live:true },
-                { ic:'⚽', name:'Futsal',    status:'Next Up',     live:false },
-                { ic:'🧘🏻‍♀️',name:'Pilates',  status:'Coming Soon', live:false },
-                { ic:'🥋', name:'Muay Thai', status:'Coming Soon', live:false },
-                { ic:'🏃', name:'Running',   status:'Coming Soon', live:false },
-                { ic:'🧘', name:'Recovery',  status:'Coming Soon', live:false },
-              ].map(s => (
-                <div key={s.name}
-                  onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.borderColor='rgba(255,255,255,.3)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor=s.live?'rgba(255,107,102,.5)':'rgba(255,255,255,.12)' }}
-                  style={{ position:'relative', zIndex:1, background:s.live?'rgba(255,107,102,.12)':'rgba(255,255,255,.05)', border:`1px solid ${s.live?'rgba(255,107,102,.5)':'rgba(255,255,255,.12)'}`, borderRadius:10, padding:'16px 10px', textAlign:'center', transition:'transform .2s ease, border-color .2s ease', boxShadow:s.live?'0 0 0 3px rgba(255,107,102,.1)':'none' }}>
-                  <span style={{ fontSize:24, display:'block', marginBottom:8 }}>{s.ic}</span>
-                  <div style={{ fontWeight:700, fontSize:14, color:WHITE, marginBottom:5 }}>{s.name}</div>
-                  <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:s.live?'#ff8a86':'rgba(255,255,255,.45)', fontWeight:s.live?700:400 }}>{s.status}</div>
+                ['WHEN',  'Sat, 15 Aug 2026 · 9:30–11:00AM'],
+                ['WHERE', 'Spartans Boxing Club, Joo Chiat'],
+                ['PRICE', '$29 for 1 pax · $43.50 for 2 pax'],
+              ].map(([lbl, val]) => (
+                <div key={lbl} style={{ fontSize:14, color:G900, display:'flex', gap:12, alignItems:'flex-start' }}>
+                  <span style={{ fontFamily:'Poppins,monospace', fontSize:12, textTransform:'uppercase', letterSpacing:'.06em', color:RED, minWidth:56, fontWeight:700, paddingTop:1 }}>{lbl}</span>
+                  <span>{val}</span>
                 </div>
               ))}
             </div>
+            <div style={{ fontSize:12, color:RED_DARK, marginBottom:22, fontWeight:600 }}>⚡ Limited slots priority by registration order</div>
+            <a href="https://shortcutx.co/pages/irl"
+              style={{ background:RED, color:WHITE, fontWeight:800, textAlign:'center', display:'block', padding:'16px 20px', borderRadius:6, textDecoration:'none', fontSize:14, transition:'.2s' }}
+              onMouseEnter={e => e.currentTarget.style.opacity='.88'}
+              onMouseLeave={e => e.currentTarget.style.opacity='1'}>
+              Register for Boxing with Fash →
+            </a>
           </div>
+        </div>
+        {/* Bottom 3-column info */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', borderTop:'1px solid rgba(255,255,255,.08)' }}>
+          {[
+            { label:'WHAT IT IS',         title:'Real events.\nReal venues.',   body:'Shortcutx IRL is our in-person fitness series — workouts, classes, and community sessions held across Singapore with real sports facilities and credentialed coaches.' },
+            { label:'WHO YOU TRAIN WITH',  title:'Athletes,\nnot influencers.', body:'Every session is led by a credentialed athlete — champions and professionals who actually compete. You get access to their training, not just their feed.' },
+            { label:'HOW TO JOIN',         title:'Register.\nShow up. Train.',  body:'Sessions are ticketed and open to the Shortcutx community. Slots are limited — register early, bring a friend, and get moving alongside people who mean it.' },
+          ].map((col, i) => (
+            <div key={col.label} style={{ padding:'36px 40px', borderRight: i < 2 ? '1px solid rgba(255,255,255,.08)' : 'none' }}>
+              <div style={{ fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.35)', marginBottom:14 }}>{col.label}</div>
+              <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:'clamp(18px,1.8vw,23px)', color:WHITE, lineHeight:1.2, marginBottom:14 }}>
+                {col.title.split('\n').map((l, li, arr) => <span key={li}>{l}{li < arr.length-1 && <br />}</span>)}
+              </div>
+              <p style={{ fontSize:14, color:'rgba(255,255,255,.5)', lineHeight:1.65, margin:0 }}>{col.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
