@@ -34,10 +34,11 @@ const products = [
 ]
 
 const catChips = [
-  { tab:'burn',   label:'Burn Fat',         count:'6 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200' },
-  { tab:'slim',   label:'Slimming Drinks',  count:'4 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200' },
-  { tab:'well',   label:'Wellness & Sleep', count:'2 formulas · from $22', img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200' },
-  { tab:'bundle', label:'Bundles',          count:'Save up to 10%',        img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-12.jpg?v=1779346704&width=200' },
+  { tab:'burn',   label:'Fat Burners',      img:'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=200' },
+  { tab:'slim',   label:'Slimming Drinks',  img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-08.jpg?v=1779346704&width=200' },
+  { tab:'meal',   label:'Meal Replacement', img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-01.jpg?v=1779346704&width=200' },
+  { tab:'well',   label:'Wellness',         img:'https://shortcutx.co/cdn/shop/files/1_c7caffba-6ebe-4bb7-bf67-f5628d6df608.png?v=1779688031&width=200' },
+  { tab:'sleep',  label:'Sleep',            img:'https://shortcutx.co/cdn/shop/files/Listing_Image-Cover-13.jpg?v=1779346704&width=200' },
 ]
 
 const goalCards = [
@@ -51,9 +52,9 @@ const heroSlides = [
   {
     bg: 'linear-gradient(135deg,#9b0d0c 0%,#6a0808 100%)',
     img: 'https://shortcutx.co/cdn/shop/files/max_podium_clear_bg.png?v=1782269359&width=700',
-    eyebrow: "Rated 4.9 · Singapore's #1 Supplement",
-    headline: "Singapore's #1\nBest-Selling\nWeight Management\nSupplements",
-    sub: "Burn more calories with Singapore's most trusted weight management supplements.",
+    eyebrow: "150,000+ Boxes Sold · Rated 4.9★",
+    headline: "Weight Management\nMade Simple.",
+    sub: "Science-backed supplements trusted by over 150,000 customers across Singapore.",
     cta: 'Shop All Products', ctaHref: '#catalog',
     cta2: 'Find Your Fit →', cta2Href: '/pages/find-your-fit',
   },
@@ -236,18 +237,15 @@ export default function Home() {
       {/* Cat-strip */}
       <section style={{ background:WHITE, borderBottom:`1px solid ${G200}`, padding:'16px 0' }}>
         <div style={WRAP}>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:12 }}>
             {catChips.map(c => (
               <div key={c.tab} onClick={() => toCatalog(c.tab)}
-                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, padding:12, display:'flex', alignItems:'center', gap:14, cursor:'pointer', transition:'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease' }}
+                style={{ background:WHITE, border:`1px solid ${G200}`, borderRadius:10, padding:'10px 12px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', transition:'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease' }}
                 onMouseEnter={e => { e.currentTarget.style.transform='translateY(-6px)'; e.currentTarget.style.boxShadow='0 20px 34px rgba(0,0,0,.1)'; e.currentTarget.style.borderColor=RED }}
                 onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow=''; e.currentTarget.style.borderColor=G200 }}
               >
-                <img src={c.img} alt={c.label} style={{ width:76, height:76, minWidth:76, borderRadius:8, objectFit:'cover', display:'block' }} />
-                <div>
-                  <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:16, color:G900 }}>{c.label}</div>
-                  <div style={{ fontFamily:'Poppins,monospace', fontSize:12, color:G500, marginTop:3 }}>{c.count}</div>
-                </div>
+                <img src={c.img} alt={c.label} style={{ width:60, height:60, minWidth:60, borderRadius:8, objectFit:'cover', display:'block' }} />
+                <div style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:14, color:G900 }}>{c.label}</div>
               </div>
             ))}
           </div>
@@ -384,7 +382,7 @@ export default function Home() {
             <p style={{ ...P_BODY, maxWidth:560 }}>Fat burners, slimming drinks, meal replacements, and wellness rituals everything we make, in one place, no digging required.</p>
           </div>
           <div style={{ display:'flex', gap:8, marginBottom:34, flexWrap:'wrap' }}>
-            {[{k:'all',label:'All Products'},{k:'burn',label:'Fat Burners'},{k:'slim',label:'Slimming Drinks'},{k:'well',label:'Wellness'},{k:'bundle',label:'Bundles'}].map(t => (
+            {[{k:'all',label:'All Products'},{k:'burn',label:'Fat Burners'},{k:'slim',label:'Slimming Drinks'},{k:'meal',label:'Meal Replacement'},{k:'well',label:'Wellness'},{k:'sleep',label:'Sleep'}].map(t => (
               <button key={t.k} onClick={() => setActiveTab(t.k)}
                 style={{ fontFamily:'Poppins,monospace', fontSize:14, textTransform:'uppercase', letterSpacing:'.04em', padding:'10px 18px', border:`1.5px solid ${activeTab===t.k ? G900 : G300}`, borderRadius:20, cursor:'pointer', background:activeTab===t.k ? G900 : 'transparent', color:activeTab===t.k ? WHITE : G900, transition:'.15s' }}>
                 {t.label}
